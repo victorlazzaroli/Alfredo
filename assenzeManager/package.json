@@ -21,6 +21,7 @@
     "@angular/platform-browser-dynamic": "~11.0.3",
     "@angular/router": "~11.0.3",
     "angular-calendar": "^0.28.22",
+    "lodash": "^4.17.20",
     "rxjs": "~6.6.3",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
