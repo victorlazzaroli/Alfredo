@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "assenzemanager": {
+      "hosting": {
+        "assenzeManager": [
+          "assenzemanager"
+        ]
+      }
+    }
+  }
+}

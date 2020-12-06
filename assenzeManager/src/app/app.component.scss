@@ -1,0 +1,49 @@
+@import 'src/assets/css/varaibles.scss';
+
+.loginContainer {
+    background-color:#e6e6e6;
+    border: 1px solid #3f51b5;
+    padding: 1rem;
+    position: relative;
+    top: calc(25%);
+    width: 50%;
+    margin: auto;
+
+    h1 {
+      font-size: 2.3rem;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      text-align: center;
+    }
+
+    strong {
+      font-size: 2.7rem;
+      font-weight: bold;
+      color: rgb(21, 66, 214);
+    }
+}
+
+.backgroundLogin {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background-color: #616161;
+}
+
+@media (max-width: $breakpoint-tablet) {
+  .loginContainer {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    top: 0;
+  }
+
+  .backgroundLogin {
+    min-height: 100vh;
+    position: relative;
+    background-color: #616161;
+  }
+}
