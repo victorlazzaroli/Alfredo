@@ -14,6 +14,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxAuthFirebaseUIModule } from 'ngx-auth-firebaseui';
 import { NotFoundComponent } from './core/components/not-found/not-found.component';
 import { OrganizerModule } from './modules/organizer/organizer.module';
+import { StoreModule } from '@ngrx/store';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { OrganizerModule } from './modules/organizer/organizer.module';
     AngularFirestoreModule,
     AngularFireAnalyticsModule,
     NgxAuthFirebaseUIModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    StoreModule.forRoot({}, {})
   ],
   providers: [],
   bootstrap: [AppComponent]
