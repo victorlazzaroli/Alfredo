@@ -26,6 +26,7 @@
     "@angular/router": "^11.0.3",
     "@schematics/angular": "^9.1.0",
     "angular-calendar": "^0.28.22",
+    "date-fns": "^2.16.1",
     "firebase": "^8.1.2",
     "firebaseui": "^4.7.1",
     "lodash": "^4.17.20",

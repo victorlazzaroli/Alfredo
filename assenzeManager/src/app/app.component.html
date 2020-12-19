@@ -1,12 +1,2 @@
-<div class="backgroundLogin">
-  <div class="loginContainer">
-    <h1><strong>Ai</strong>fredo</h1>
-    <h2>Assenze Organizer</h2>
-    <ngx-auth-firebaseui
-      [providers]="[providers.EmailAndPassword]"
-      (onSuccess)="onSuccess($event)"
-      (onError)="printError($event)"
-    >
-    </ngx-auth-firebaseui>
-  </div>
-</div>
+<app-header *ngIf="user | async as user"></app-header>
+<router-outlet></router-outlet>

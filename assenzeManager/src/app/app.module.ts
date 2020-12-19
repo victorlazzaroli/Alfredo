@@ -12,16 +12,20 @@ import { AngularFireAnalyticsModule } from '@angular/fire/analytics';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxAuthFirebaseUIModule } from 'ngx-auth-firebaseui';
+import { NotFoundComponent } from './core/components/not-found/not-found.component';
+import { OrganizerModule } from './modules/organizer/organizer.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     AuthenticationComponent,
     FooterComponent,
-    HeaderComponent
+    HeaderComponent,
+    NotFoundComponent
   ],
   imports: [
     BrowserModule,
+    OrganizerModule,
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase),
     NgxAuthFirebaseUIModule.forRoot(environment.firebase,
@@ -31,7 +35,7 @@ import { NgxAuthFirebaseUIModule } from 'ngx-auth-firebaseui';
        toastMessageOnAuthSuccess: false, // whether to open/show a snackbar message on auth success - default : true
        toastMessageOnAuthError: false, // whether to open/show a snackbar message on auth error - default : true
        authGuardFallbackURL: '/loggedout', // url for unauthenticated users - to use in combination with canActivate feature on a route
-       authGuardLoggedInURL: '/organizer', // url for authenticated users - to use in combination with canActivate feature on a route
+       authGuardLoggedInURL: '/home', // url for authenticated users - to use in combination with canActivate feature on a route
        passwordMaxLength: 20, // `min/max` input parameters in components should be within this range.
        passwordMinLength: 5, // Password length min/max in forms independently of each componenet min/max.
        // Same as password but for the name
@@ -39,8 +43,8 @@ import { NgxAuthFirebaseUIModule } from 'ngx-auth-firebaseui';
        nameMinLength: 2,
        // If set, sign-in/up form is not available until email has been verified.
        // Plus protected routes are still protected even though user is connected.
-       guardProtectedRoutesUntilEmailIsVerified: false,
-       enableEmailVerification: false, // default: true
+       guardProtectedRoutesUntilEmailIsVerified: true,
+       enableEmailVerification: true, // default: true
      }),
     AngularFirestoreModule,
     AngularFireAnalyticsModule,

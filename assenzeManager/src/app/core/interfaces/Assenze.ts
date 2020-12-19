@@ -20,3 +20,7 @@ export interface CalendarioAssenze {
   anno: number;
   giornate: GiornataCalendario[];
 }
+export interface Day {
+  isHoliday: boolean;
+  isAssenza: boolean;
+}

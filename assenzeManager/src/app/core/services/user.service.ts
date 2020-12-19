@@ -8,8 +8,4 @@ import { UserInfo } from '../interfaces/UserInfo';
 export class UserService {
 
   constructor() { }
-
-  createDipendente(userData: UserInfo) {
-    AngularFirestore.
-  }
 }

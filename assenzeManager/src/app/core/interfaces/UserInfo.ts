@@ -4,7 +4,7 @@ import { Autorizzazioni } from '../enum/autorizzazioni';
 
 export interface Dipendente {
   ruolo: Ruolo;
-  uid: string;
+  email: string;
 }
 
 export interface UserInfo extends Dipendente {

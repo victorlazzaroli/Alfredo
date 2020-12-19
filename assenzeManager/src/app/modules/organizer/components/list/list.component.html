@@ -1,0 +1,47 @@
+<div class="listaContainer" *ngIf="dipendenti?.length > 0 && tabellaDipendentiAssenze?.length > 0" >
+  <div class="leftEmpty">.</div>
+  <!-- <div class="utenti">
+    <div class="empty"></div>
+    <div class="utente" *ngFor="let dipendente of dipendenti" >
+      <span>{{ dipendente.name }}</span>
+    </div>
+  </div>
+  <div class="calendarioContainer">
+    <div class="monthYearHeader">Marzo, 2020</div>
+    <div class="monthYearContainer">
+      <div class="dayDateCol" *ngFor="let day of tabellaDipendentiAssenze[0]; let dayIdx = index" >
+        <div class="userDayCell">{{ dayIdx + 1 }}</div>
+        <div class="userDayCell" *ngFor="let dipendente of dipendenti; let dipendenteIdx = index"></div>
+      </div>
+    </div>
+  </div> -->
+  <div class="tableContainer">
+    <div class="empty"></div>
+    <div class="monthYear">{{currentDate | date:'MMMM, YYYY'}}</div>
+    <div class="scrollingContainer">
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th [colSpan]="tabellaDipendentiAssenze[0].length"><div class="monthYearHeader"></div></th>
+          </tr>
+          <tr>
+            <th></th>
+            <th *ngFor="let day of tabellaDipendentiAssenze[0]; let dayIdx = index" >
+              <div class="dayCell">{{ dayIdx + 1 }}</div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let dipendente of dipendenti; let dipendenteIdx = index">
+            <td><div class="nomeDipendente">{{ dipendente.name }}</div></td>
+            <td *ngFor="let day of tabellaDipendentiAssenze[dipendenteIdx]; let dayIdx = index" [ngStyle]= "{ 'background-color': (day?.isHoliday ? 'rgb(206, 203, 203)' : day?.isAssenza ? 'red' : 'white')}">
+            </td>
+          </tr>
+        </tbody>
+      </table>
+  </div>
+  </div>
+  <div class="rightEmpty">.</div>
+</div>
+

@@ -1,0 +1,13 @@
+<div class="backgroundLogin">
+  <div class="loginContainer">
+    <h1><strong>Ai</strong>fredo</h1>
+    <h2>Assenze Organizer</h2>
+    <ngx-auth-firebaseui-login
+      [providers]="[providers.EmailAndPassword]"
+      [registrationEnabled]="false"
+      (onSuccess)="onSuccess($event)"
+      (onError)="printError($event)"
+    >
+    </ngx-auth-firebaseui-login>
+  </div>
+</div>

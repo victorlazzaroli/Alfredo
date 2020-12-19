@@ -1,23 +1,26 @@
 .mainNav{
-  position: fixed;
+  position: sticky;
   top: 0;
   z-index: 999;
-  background-color: #3f51b5;
-  height: 3rem;
+  background-color: white;
   width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
+  padding: 0.5rem;
+  border-bottom: 1px solid #3f51b5;
 
   .logo {
-    padding: 1rem;
+    margin-right: 1rem;
 
     h1 {
-      font-size: 2.3rem;
+      font-size: 1.8rem;
+      margin: 0;
+      color: black;
     }
 
     strong {
-      font-size: 2.7rem;
+      font-size: 2.3rem;
       font-weight: bold;
       color: rgb(21, 66, 214);
     }
