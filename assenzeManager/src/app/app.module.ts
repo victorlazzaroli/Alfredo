@@ -15,6 +15,7 @@ import { NgxAuthFirebaseUIModule } from 'ngx-auth-firebaseui';
 import { NotFoundComponent } from './core/components/not-found/not-found.component';
 import { OrganizerModule } from './modules/organizer/organizer.module';
 import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { StoreModule } from '@ngrx/store';
     AngularFireAnalyticsModule,
     NgxAuthFirebaseUIModule,
     BrowserAnimationsModule,
-    StoreModule.forRoot({}, {})
+    StoreModule.forRoot({}, {}),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
   ],
   providers: [],
   bootstrap: [AppComponent]
