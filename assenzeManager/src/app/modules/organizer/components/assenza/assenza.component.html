@@ -1,0 +1,68 @@
+<mat-card>
+  <mat-card-title>Nuova assenza</mat-card-title>
+  <mat-card-subtitle>Aggiungi una nuova assenza</mat-card-subtitle>
+  <form [formGroup]="form">
+    <div class="assenzaEntry" >
+      <div class="row flex-align-center flex-justify-center">
+
+        <mat-form-field appearance="fill">
+          <mat-label>Dipendente*</mat-label>
+          <mat-select formControlName="dipendente">
+            <mat-option [value]="dipendente.uid" *ngFor="let dipendente of dipendenti | async">{{dipendente?.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Tipologia assenza*</mat-label>
+          <mat-select #tipoAssenza formControlName="tipoAssenza">
+            <mat-option value="{{ TipoAssenzaEnum.PAR }}">PAR</mat-option>
+            <mat-option value="{{ TipoAssenzaEnum.FERIE }}">Ferie</mat-option>
+            <mat-option value="{{ TipoAssenzaEnum.MALATTIA }}">Malattia</mat-option>
+            <mat-option value="{{ TipoAssenzaEnum.ALTRO }}">Altro</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-checkbox formControlName="frazioneDiGiornata"
+          [disabled]="tipoAssenza.value === TipoAssenzaEnum.FERIE || tipoAssenza.value === null"
+          [checked]="tipoAssenza.value !== TipoAssenzaEnum.FERIE && tipoAssenza.value !== TipoAssenzaEnum.MALATTIA && tipoAssenza.value !== null"
+          #frazione>Frazione di giornata?*</mat-checkbox>
+      </div>
+      <div class="row">
+        <mat-form-field *ngIf="tipoAssenza.value === TipoAssenzaEnum.ALTRO"  appearance="fill">
+          <mat-label>Descrivi il tipo di assenza</mat-label>
+          <input matInput type="text" formControlName="descrizioneAltro"/>
+        </mat-form-field>
+      </div>
+      <div class="row" *ngIf="tipoAssenza.value !== null">
+        <mat-form-field appearance="fill">
+          <mat-label *ngIf="frazione.checked">Seleziona la data*</mat-label>
+          <mat-label *ngIf="!frazione.checked">Data di partenza*</mat-label>
+          <input matInput [matDatepicker]="dataInizio" formControlName="dataInizio"/>
+          <mat-datepicker-toggle matSuffix [for]="dataInizio"></mat-datepicker-toggle>
+          <mat-datepicker #dataInizio></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="fill" *ngIf="!frazione.checked">
+          <mat-label>Data di fine*</mat-label>
+          <input matInput [matDatepicker]="dataFine" formControlName="dataFine"/>
+          <mat-datepicker-toggle matSuffix [for]="dataFine"></mat-datepicker-toggle>
+          <mat-datepicker #dataFine></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field *ngIf="frazione.checked"  appearance="fill">
+          <mat-label>Orario di partenza*</mat-label>
+          <input matInput min="8" max="24" type="number" formControlName="oraInizio">
+        </mat-form-field>
+        <mat-form-field *ngIf="frazione.checked"  appearance="fill">
+          <mat-label>Orario di fine*</mat-label>
+          <input matInput  min="8" max="24" type="number" formControlName="oraFine">
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="nota">
+      <p>* campi obbligatori</p>
+    </div>
+    <div class="align-right mt-7">
+      <button mat-raised-button (click)="addAssenza()" class="align-right" color="primary">Invia</button>
+    </div>
+  </form>
+</mat-card>
+

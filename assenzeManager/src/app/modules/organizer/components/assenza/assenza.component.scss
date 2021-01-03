@@ -1,0 +1,35 @@
+mat-card {
+  margin: 1rem auto;
+  width: 95%;
+  max-width: 1440px;
+}
+
+mat-divider {
+  margin: 0.5rem 0;
+}
+
+mat-card-title {
+  margin-bottom: 1rem;
+}
+
+mat-card-subtitle {
+  margin: 0;
+}
+
+mat-form-field {
+  flex-grow: 1;
+  margin: 0.5rem;
+}
+
+.assenzaEntry {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.nota {
+  width: 100%;
+  margin: 1rem;
+  color: gray;
+  font-size: 1rem;
+}
