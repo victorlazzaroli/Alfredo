@@ -1,10 +1,25 @@
 import { Dipendente } from './UserInfo';
+import {Ruolo} from './ProgettoInfo';
 
 export interface Assenza {
   id: string;
   giornataIntera: boolean;
-  dataInizio: Date;
-  dataFine: Date;
+  dataInizio: string;
+  dataFine: string;
+  oraInizio?: string;
+  oraFine?: string;
+}
+
+export interface AssenzaDipendente {
+  id?: string;
+  dipendente: string;
+  tipoAssenza: 'PAR' | 'FERIE' | 'MALATTIA' | 'ALTRO';
+  frazioneDiGiornata: boolean;
+  descrizioneAltro?: string;
+  dataInizio: string;
+  dataFine: string;
+  oraInizio?: string;
+  oraFine?: string;
 }
 
 export interface GiornataCalendario {
@@ -12,7 +27,7 @@ export interface GiornataCalendario {
   giorno: number;
   mese: number;
   anno: number;
-  assenti: Dipendente[];
+  assenti?: AssenzaDipendente[];
 }
 
 export interface CalendarioAssenze {

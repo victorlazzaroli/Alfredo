@@ -8,6 +8,7 @@ export interface Dipendente {
 }
 
 export interface UserInfo extends Dipendente {
+  uid?: string;
   name: string;
   email: string;
   autorizzazione: Autorizzazioni;

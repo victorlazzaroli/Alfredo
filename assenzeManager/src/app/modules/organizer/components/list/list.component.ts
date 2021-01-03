@@ -57,7 +57,7 @@ export class ListComponent implements OnInit {
         const giorno = assenza.get('giorno');
         assenza.ref.collection('assenti').get().then(dipendenti => {
           dipendenti.forEach(assente => {
-            const idxDipendente = this.dipendenti.findIndex(dipendente => dipendente.email === assente.get('dipendente'));
+            const idxDipendente = this.dipendenti.findIndex(dipendente => dipendente.uid === assente.id);
             this.tabellaDipendentiAssenze[idxDipendente][giorno].isAssenza = true;
           });
         });

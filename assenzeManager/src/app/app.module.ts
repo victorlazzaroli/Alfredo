@@ -16,6 +16,11 @@ import { NotFoundComponent } from './core/components/not-found/not-found.compone
 import { OrganizerModule } from './modules/organizer/organizer.module';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import {NgxMatDatetimePickerModule, NgxMatTimepickerModule} from '@angular-material-components/datetime-picker';
+import {NgxMatMomentModule} from '@angular-material-components/moment-adapter';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -50,8 +55,14 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
      }),
     AngularFirestoreModule,
     AngularFireAnalyticsModule,
+    MatMomentDateModule,
     NgxAuthFirebaseUIModule,
     BrowserAnimationsModule,
+    NgxMatDatetimePickerModule,
+    NgxMatTimepickerModule,
+    NgxMatMomentModule,
+    MatButtonModule,
+    MatCheckboxModule,
     StoreModule.forRoot({}, {}),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
   ],

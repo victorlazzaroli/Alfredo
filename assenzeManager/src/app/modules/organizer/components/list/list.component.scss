@@ -34,7 +34,7 @@
   position: absolute;
   top: 1px;
   left: 0;
-  z-index: 9999;
+  z-index: 5;
   border-right: solid 1px gray;
   margin-right: -1px;
 }
@@ -46,11 +46,10 @@
   height: 30px;
   width: calc(100% - 178px);
   position: absolute;
-  z-index: 9999;
+  z-index: 5;
   top: 1px;
   left: 160px;
   padding: 0.5rem;
-  padding-left: 10.5;
   border-bottom: 1px solid gray;
   text-align: center;
   font-weight: bold;
