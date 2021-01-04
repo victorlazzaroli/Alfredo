@@ -18,6 +18,8 @@ import {NgxMatDatetimePickerModule} from '@angular-material-components/datetime-
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatMenuModule} from '@angular/material/menu';
 
 
 @NgModule({
@@ -25,7 +27,6 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
   imports: [
     CommonModule,
     OrganizerRoutingModule,
-    StoreModule.forFeature(fromOrganizer.organizerFeatureKey, fromOrganizer.reducers, {metaReducers: fromOrganizer.metaReducers}),
     MatCardModule,
     MatDividerModule,
     MatFormFieldModule,
@@ -36,7 +37,9 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     NgxMatDatetimePickerModule,
     ReactiveFormsModule,
     MatButtonModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatTooltipModule,
+    MatMenuModule
   ]
 })
 export class OrganizerModule { }

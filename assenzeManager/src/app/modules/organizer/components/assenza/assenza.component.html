@@ -24,7 +24,6 @@
 
         <mat-checkbox formControlName="frazioneDiGiornata"
           [disabled]="tipoAssenza.value === TipoAssenzaEnum.FERIE || tipoAssenza.value === null"
-          [checked]="tipoAssenza.value !== TipoAssenzaEnum.FERIE && tipoAssenza.value !== TipoAssenzaEnum.MALATTIA && tipoAssenza.value !== null"
           #frazione>Frazione di giornata?*</mat-checkbox>
       </div>
       <div class="row">

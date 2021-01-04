@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {UserInfo} from '../../../../core/interfaces/UserInfo';
-import {AssenzaDipendente, Day, GiornataCalendario} from '../../../../core/interfaces/Assenze';
+import {Assenza, AssenzaDipendente, Day, GiornataCalendario} from '../../../../core/interfaces/Assenze';
 import {lastDayOfMonth} from 'date-fns';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {first, map} from 'rxjs/operators';
@@ -9,6 +9,7 @@ import {Observable, of} from 'rxjs';
 import {formatISO, getDayOfYear, isValid, isWithinInterval} from 'date-fns/esm';
 import firebase from 'firebase/app';
 import {isMoment} from 'moment/moment';
+import {AssenzeService} from '../../services/assenze.service';
 
 enum TipoAssenzaEnum {
   PAR = 'PAR',
@@ -22,12 +23,31 @@ enum TipoAssenzaEnum {
   styleUrls: ['./assenza.component.scss']
 })
 export class AssenzaComponent implements OnInit {
+
+  @Input('assenza')
+  set _assenza(val: AssenzaDipendente) {
+    if (val) {
+      this.assenza = val;
+      Object.keys(val).forEach(Key => {
+        this.form.patchValue({[Key]: val[Key]}, {emitEvent: true});
+      });
+      this.isModifica = true;
+    } else {
+      this.assenza = null;
+      this.form.reset();
+    }
+  }
+  assenza: AssenzaDipendente;
+
+  isModifica = false;
+
   form: FormGroup;
   dipendenti: Observable<UserInfo[]>;
 
   TipoAssenzaEnum = TipoAssenzaEnum;
 
   constructor(private formBuilder: FormBuilder,
+              private assenzaService: AssenzeService,
               private firestore: AngularFirestore) {
 
     this.createForm();
@@ -46,11 +66,18 @@ export class AssenzaComponent implements OnInit {
     });
 
     this.form.controls.tipoAssenza.valueChanges.subscribe(value => {
+      if (value !== TipoAssenzaEnum.FERIE && value !== TipoAssenzaEnum.MALATTIA && value !== null) {
+        this.form.controls.frazioneDiGiornata.patchValue(true, { emitEvent: true});
+      } else {
+        this.form.controls.frazioneDiGiornata.patchValue(false, { emitEvent: true});
+      }
       if (value === TipoAssenzaEnum.MALATTIA || value === TipoAssenzaEnum.FERIE) {
+        this.resetAllErrors();
         this.form.controls.oraInizio.clearValidators();
         this.form.controls.oraFine.clearValidators();
         this.form.controls.dataFine.setValidators(Validators.required);
       } else {
+        this.resetAllErrors();
         this.form.controls.oraInizio.setValidators(Validators.required);
         this.form.controls.oraFine.setValidators(Validators.required);
         this.form.controls.dataFine.clearValidators();
@@ -59,6 +86,7 @@ export class AssenzaComponent implements OnInit {
 
     this.form.controls.frazioneDiGiornata.valueChanges.subscribe(value => {
       if (value) {
+        this.resetAllErrors();
         this.form.controls.oraInizio.setValidators(Validators.required);
         this.form.controls.oraFine.setValidators(Validators.required);
         this.form.controls.dataFine.clearValidators();
@@ -77,74 +105,46 @@ export class AssenzaComponent implements OnInit {
     }), first());
   }
 
-  generaGiornateCalendario(): GiornataCalendario[] {
-    const dataInizio: Date = new Date(this.form.controls.dataInizio.value);
-    const dataFine: Date = new Date(this.form.controls.dataFine.value);
-    const giornateCalendario: GiornataCalendario[] = [];
-
-    if (isValid(dataInizio) && isValid(dataFine)) {
-      for (let i = 0; i < getDayOfYear(dataFine) - getDayOfYear(dataInizio); i++) {
-        const data = new Date(dataInizio.getFullYear(), dataInizio.getMonth(), dataInizio.getDate() + i);
-        giornateCalendario.push({
-          id: formatISO(data, {representation: 'date'}),
-          anno: data.getFullYear(),
-          mese: data.getMonth(),
-          giorno: data.getDate()
-        });
-      }
-    }
-
-    return giornateCalendario;
-  }
-
   async addAssenza() {
-
     if (this.form.invalid) {
       alert('FORM INVALIDO');
+      this.form.reset();
+      this.resetAllErrors();
+      this.isModifica = false;
       return;
     }
+    if (this.isModifica) {
+      const data = new Date(this.assenza.dataInizio);
+      await this.assenzaService.cancellaAssenza(this.assenza.dipendente, data);
+      this.isModifica = false;
+    }
 
-    const dipendenteRef = this.firestore.doc(`/dipendente/${this.form.controls.dipendente.value}`).ref;
-    this.firestore.firestore.runTransaction( async transaction => {
-      if (dipendenteRef) {
-        const snap = await transaction.get(dipendenteRef);
-        const dipendente = snap.data() as UserInfo;
+    if (this.form.controls.frazioneDiGiornata.value) {
+      this.form.controls.dataFine.patchValue(this.form.controls.dataInizio.value);
+    }
 
-        const nuovoInizio = new Date(this.form.controls.dataInizio.value);
-        const nuovaFine = new Date(this.form.controls.dataFine.value);
+    await this.assenzaService.nuovaAssenza({
+      ...this.form.value,
 
-        const assenzaPresente = dipendente?.assenze?.find(assenza => {
-          const interval: Interval = {start: new Date(assenza.dataInizio), end: new Date(assenza.dataFine)};
-          try {
-            return isWithinInterval(nuovoInizio, interval) || isWithinInterval(nuovaFine, interval);
-          } catch (error) {
-            return false;
-          }
-        });
+      frazioneDiGiornata: !!this.form.controls.frazioneDiGiornata.value,
 
-        if (!assenzaPresente) {
-          const giornateCalendario = await this.generaGiornateCalendario();
-          transaction.update(dipendenteRef,
-            {
-              assenze: firebase.firestore.FieldValue.arrayUnion({
-                ...this.form.value,
-                dataInizio: isMoment(this.form.controls.dataInizio.value) ? this.form.controls.dataInizio.value.format('YYYY-MM-DD') : this.form.controls.dataInizio.value.toString(),
-                // tslint:disable-next-line:max-line-length
-                dataFine: isMoment(this.form.controls.dataFine.value) ? this.form.controls.dataFine.value.format('YYYY-MM-DD') : this.form.controls.dataFine.value.toString()
-              })
-            });
-          giornateCalendario.forEach((giornata) => {
-            const ref = this.firestore.doc(`/assenze/${giornata.id}`).ref;
-            const assenzaRef = this.firestore.doc(`/assenze/${giornata.id}/assenti/${dipendente.uid}`).ref;
-            transaction.set(ref, { anno: giornata.anno, mese: giornata.mese, giorno: giornata.giorno}, {merge: true});
-            transaction.set(assenzaRef, {
-              ...this.form.value,
-              dataInizio: isMoment(this.form.controls.dataInizio.value) ? this.form.controls.dataInizio.value.format('YYYY-MM-DD') : this.form.controls.dataInizio.value.toString(),
-              dataFine: isMoment(this.form.controls.dataFine.value) ? this.form.controls.dataFine.value.format('YYYY-MM-DD') : this.form.controls.dataFine.value.toString()
-            });
-          });
-        }
+      dataInizio: isMoment(this.form.controls.dataInizio.value) ?
+          this.form.controls.dataInizio.value.format('YYYY-MM-DD') : this.form.controls.dataInizio.value.toString(),
+
+      dataFine: isMoment(this.form.controls.dataFine.value) ?
+          this.form.controls.dataFine.value.format('YYYY-MM-DD') :
+          this.form.controls.dataFine.value ? this.form.controls.dataFine.value.toString() : null
       }
-    });
+    );
+    this.form.reset();
+    this.assenza = null;
+  }
+
+  private resetAllErrors() {
+    for (const key in this.form.controls) {
+      if (this.form.controls[key]) {
+        this.form.controls[key].setErrors(null);
+      }
+    }
   }
 }

@@ -1,5 +1,5 @@
 import { Ruolo, Progetto } from './ProgettoInfo';
-import { Assenza } from './Assenze';
+import {Assenza, AssenzaDipendente} from './Assenze';
 import { Autorizzazioni } from '../enum/autorizzazioni';
 
 export interface Dipendente {
@@ -13,5 +13,5 @@ export interface UserInfo extends Dipendente {
   email: string;
   autorizzazione: Autorizzazioni;
   progetti?: Progetto[];
-  assenze?: Assenza[];
+  assenze?: AssenzaDipendente[];
 }

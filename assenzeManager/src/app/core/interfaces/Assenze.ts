@@ -35,7 +35,9 @@ export interface CalendarioAssenze {
   anno: number;
   giornate: GiornataCalendario[];
 }
-export interface Day {
+export interface Day extends AssenzaDipendente {
   isHoliday: boolean;
-  isAssenza: boolean;
+  isGiornataAssenza: boolean;
+  isOreAssenza: boolean;
+  oreDiAssenza?: string;
 }
