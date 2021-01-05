@@ -20,6 +20,8 @@ export class AuthenticationComponent implements OnInit {
 
   providers = AuthProvider;
   authForm: FormGroup;
+  visibility = false;
+  error: boolean;
 
   constructor(
     private firestore: AngularFirestore,
@@ -27,8 +29,8 @@ export class AuthenticationComponent implements OnInit {
     public afAuth: AngularFireAuth,
     private router: Router) {
     this.authForm = this.formBuilder.group({
-      email: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]]
     });
   }
 
@@ -73,7 +75,14 @@ export class AuthenticationComponent implements OnInit {
   }
 
   login() {
-    this.afAuth.signInWithPopup(new firebase.auth.EmailAuthProvider());
+    if (this.authForm.valid) {
+      this.afAuth.signInWithEmailAndPassword(this.authForm.controls.email.value, this.authForm.controls.password.value)
+        .then(user => {
+          this.error = false;
+          console.log(user);
+        })
+        .catch(error => this.error = true);
+    }
   }
 
   logout() {

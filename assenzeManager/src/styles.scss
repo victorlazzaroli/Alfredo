@@ -8,6 +8,14 @@ body { width: 100%; margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif
   text-align: right;
 }
 
+.align-center {
+  text-align: center;
+}
+
+.font-bold {
+  font-weight: bold;
+}
+
 .row {
   display: flex;
   flex-direction: row;

@@ -2,21 +2,25 @@
   <div class="loginContainer mat-elevation-z2">
     <h1><strong>Ai</strong>fredo</h1>
     <h2>Assenze Organizer</h2>
-    <div *ngIf="afAuth.user | async as user; else showLogin">
-      <h1>Hello {{ user.displayName }}!</h1>
-      <button mat-button (click)="logout()">Logout</button>
+    <mat-error *ngIf="error" class="align-center font-bold">Email o Password errati o non censiti</mat-error>
+    <div  class="authForm" *ngIf="afAuth.user | async as user; else showLogin">
+      <h2>Ciao {{ user.displayName }}!</h2>
+      <button mat-stroked-button style="margin-top: 1rem" color="primary" (click)="logout()">Logout</button>
     </div>
     <ng-template #showLogin>
       <form [formGroup]="authForm" class="authForm">
         <mat-form-field appearance="fill" class="formControl">
           <mat-label>Email</mat-label>
-          <input matInput name="authAifredoEmail" type="email">
+          <input matInput name="authAifredoEmail" type="email" formControlName="email">
+          <mat-error *ngIf="authForm.controls.email.invalid">Email non valida</mat-error>
         </mat-form-field>
         <mat-form-field appearance="fill" class="formControl">
           <mat-label>Password</mat-label>
-          <input name="authAifredoPassword" matInput type="password">
+          <input name="authAifredoPassword" matInput [type]="visibility ? 'text' : 'password'" formControlName="password">
+          <mat-icon style="cursor: pointer" matSuffix (click)="visibility = !visibility">{{ visibility ? 'visibility_off' : 'visibility'}}</mat-icon>
+          <mat-error *ngIf="authForm.controls.password.invalid">Password obbligatoria</mat-error>
         </mat-form-field>
-        <button mat-button (click)="login()">Login</button>
+        <button mat-raised-button color="accent" style="margin-top: 1rem" (click)="login()">Login</button>
       </form>
     </ng-template>
   </div>
