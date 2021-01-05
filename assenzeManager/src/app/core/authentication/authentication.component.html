@@ -1,14 +1,23 @@
 <div class="backgroundLogin">
-  <div class="loginContainer">
+  <div class="loginContainer mat-elevation-z2">
     <h1><strong>Ai</strong>fredo</h1>
     <h2>Assenze Organizer</h2>
-    <ngx-auth-firebaseui-login
-      [providers]="[providers.EmailAndPassword]"
-      [registrationEnabled]="false"
-      (onSuccess)="onSuccess($event)"
-      (onError)="printError($event)"
-      [orLabelText]="null"
-    >
-    </ngx-auth-firebaseui-login>
+    <div *ngIf="afAuth.user | async as user; else showLogin">
+      <h1>Hello {{ user.displayName }}!</h1>
+      <button mat-button (click)="logout()">Logout</button>
+    </div>
+    <ng-template #showLogin>
+      <form [formGroup]="authForm" class="authForm">
+        <mat-form-field appearance="fill" class="formControl">
+          <mat-label>Email</mat-label>
+          <input matInput name="authAifredoEmail" type="email">
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="formControl">
+          <mat-label>Password</mat-label>
+          <input name="authAifredoPassword" matInput type="password">
+        </mat-form-field>
+        <button mat-button (click)="login()">Login</button>
+      </form>
+    </ng-template>
   </div>
 </div>

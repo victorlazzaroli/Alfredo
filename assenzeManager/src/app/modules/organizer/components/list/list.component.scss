@@ -42,7 +42,7 @@
 .monthYear {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   height: 30px;
   width: calc(100% - 178px);
   position: absolute;
@@ -55,6 +55,10 @@
   font-weight: bold;
   color: rgb(129, 129, 129);
   background-color:rgb(206, 203, 203);
+
+  mat-icon {
+    cursor: pointer;
+  }
 }
 
 table {

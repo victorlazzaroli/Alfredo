@@ -13,17 +13,23 @@ export class AuthService {
     private auth: AngularFireAuth) { }
 
   getAuthUser(): Observable<any> {
-    const user = this.persistenceService.retrieve('authUser');
-    if (!user) {
-      return this.auth.user.pipe(authUser => {
-        if (authUser) {
-          this.persistenceService.save('authUser', authUser);
-        }
+    // const user = this.persistenceService.retrieve('authUser');
+    // if (!user) {
+    //   return this.auth.user.pipe(authUser => {
+    //     if (authUser) {
+    //       this.persistenceService.save('authUser', authUser);
+    //     }
+    //
+    //     return authUser;
+    //   });
+    // }
+    //
+    // return of(user);
+    return null;
+  }
 
-        return authUser;
-      });
-    }
-
-    return of(user);
+  logOut(): Observable<any> {
+    this.persistenceService.remove('authUser');
+    return of(this.auth.signOut());
   }
 }

@@ -1,26 +1,36 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { AuthenticationComponent } from './core/authentication/authentication.component';
-import { FooterComponent } from './core/footer/footer.component';
-import { HeaderComponent } from './core/header/header.component';
-import { AngularFireModule } from '@angular/fire';
-import { environment } from 'src/environments/environment';
-import { AngularFireAnalyticsModule } from '@angular/fire/analytics';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgxAuthFirebaseUIModule } from 'ngx-auth-firebaseui';
-import { NotFoundComponent } from './core/components/not-found/not-found.component';
-import { OrganizerModule } from './modules/organizer/organizer.module';
-import { StoreModule } from '@ngrx/store';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import {AppRoutingModule} from './app-routing.module';
+import {AppComponent} from './app.component';
+import {AuthenticationComponent} from './core/authentication/authentication.component';
+import {FooterComponent} from './core/footer/footer.component';
+import {HeaderComponent} from './core/header/header.component';
+import {AngularFireModule} from '@angular/fire';
+import {environment} from 'src/environments/environment';
+import {AngularFireAnalyticsModule} from '@angular/fire/analytics';
+import {AngularFirestoreModule} from '@angular/fire/firestore';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {NotFoundComponent} from './core/components/not-found/not-found.component';
+import {OrganizerModule} from './modules/organizer/organizer.module';
+import {MatMomentDateModule} from '@angular/material-moment-adapter';
 import {NgxMatDatetimePickerModule, NgxMatTimepickerModule} from '@angular-material-components/datetime-picker';
 import {NgxMatMomentModule} from '@angular-material-components/moment-adapter';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatMenuModule} from '@angular/material/menu';
+import {ProfileComponent} from './core/components/profile/profile.component';
+import {CreateUserComponent} from './core/components/create-user/create-user.component';
+import {MatCardModule} from '@angular/material/card';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatOptionModule} from '@angular/material/core';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import {ReactiveFormsModule} from '@angular/forms';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -28,45 +38,39 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     AuthenticationComponent,
     FooterComponent,
     HeaderComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    ProfileComponent,
+    CreateUserComponent
   ],
   imports: [
     BrowserModule,
     OrganizerModule,
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase),
-    NgxAuthFirebaseUIModule.forRoot(environment.firebase,
-      () => 'assenzeManager',
-     {
-       enableFirestoreSync: false, // enable/disable autosync users with firestore
-       toastMessageOnAuthSuccess: false, // whether to open/show a snackbar message on auth success - default : true
-       toastMessageOnAuthError: false, // whether to open/show a snackbar message on auth error - default : true
-       authGuardFallbackURL: '/loggedout', // url for unauthenticated users - to use in combination with canActivate feature on a route
-       authGuardLoggedInURL: '/home', // url for authenticated users - to use in combination with canActivate feature on a route
-       passwordMaxLength: 20, // `min/max` input parameters in components should be within this range.
-       passwordMinLength: 5, // Password length min/max in forms independently of each componenet min/max.
-       // Same as password but for the name
-       nameMaxLength: 50,
-       nameMinLength: 2,
-       // If set, sign-in/up form is not available until email has been verified.
-       // Plus protected routes are still protected even though user is connected.
-       guardProtectedRoutesUntilEmailIsVerified: true,
-       enableEmailVerification: true, // default: true
-     }),
     AngularFirestoreModule,
     AngularFireAnalyticsModule,
     MatMomentDateModule,
-    NgxAuthFirebaseUIModule,
     BrowserAnimationsModule,
     NgxMatDatetimePickerModule,
     NgxMatTimepickerModule,
     NgxMatMomentModule,
+    MatCardModule,
+    MatDividerModule,
+    MatFormFieldModule,
+    MatOptionModule,
+    MatDatepickerModule,
+    MatInputModule,
+    MatSelectModule,
+    NgxMatDatetimePickerModule,
+    ReactiveFormsModule,
     MatButtonModule,
     MatCheckboxModule,
-    StoreModule.forRoot({}, {}),
-    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
+    MatTooltipModule,
+    MatMenuModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

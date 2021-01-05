@@ -2,7 +2,11 @@
   <div class="leftEmpty">.</div>
   <div class="tableContainer">
     <div class="empty"></div>
-    <div class="monthYear">{{currentDate | date:'MMMM, YYYY'}}</div>
+    <div class="monthYear">
+      <mat-icon (click)="prevMonth()">chevron_left</mat-icon>
+      {{currentDate | date:'MMMM, YYYY'}}
+      <mat-icon (click)="nextMonth()">chevron_right</mat-icon>
+    </div>
     <div class="scrollingContainer">
       <table>
         <thead>

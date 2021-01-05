@@ -4,8 +4,6 @@ import { CommonModule } from '@angular/common';
 import { OrganizerRoutingModule } from './organizer-routing.module';
 import { OrganizerComponent } from './organizer.component';
 import { ListComponent } from './components/list/list.component';
-import { StoreModule } from '@ngrx/store';
-import * as fromOrganizer from './reducers';
 import { AssenzaComponent } from './components/assenza/assenza.component';
 import {MatCardModule} from '@angular/material/card';
 import {MatDividerModule} from '@angular/material/divider';
@@ -20,6 +18,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatMenuModule} from '@angular/material/menu';
+import {MatIconModule} from '@angular/material/icon';
 
 
 @NgModule({
@@ -39,7 +38,8 @@ import {MatMenuModule} from '@angular/material/menu';
     MatButtonModule,
     MatCheckboxModule,
     MatTooltipModule,
-    MatMenuModule
+    MatMenuModule,
+    MatIconModule
   ]
 })
 export class OrganizerModule { }

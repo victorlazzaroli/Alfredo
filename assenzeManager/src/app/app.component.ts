@@ -21,13 +21,11 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.user = this.authService.getAuthUser();
-    this.user.subscribe(authUser => {
-      if (authUser) {
-        this.router.navigate(['/home']);
-      } else {
-        this.router.navigate(['/login'])
-      }
-    });
+    // this.user = this.authService.getAuthUser();
+    // this.user.subscribe(authUser => {
+    //   if (!authUser) {
+    //     this.router.navigate(['/login']);
+    //   }
+    // });
   }
 }

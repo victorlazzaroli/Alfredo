@@ -1,5 +1,11 @@
 <nav class="mainNav">
   <div class="logo"><a href="/" target="_self"><h1><strong>Ai</strong>fredo</h1></a></div>
   <div class="menu"></div>
-  <div class="userMenu"></div>
+  <div class="userMenu" [matMenuTriggerFor]="appMenu"> {{ user.displayName }}</div>
 </nav>
+<mat-menu #appMenu="matMenu">
+  <ng-template matMenuContent>
+    <button mat-menu-item (click)="goToProfile()">Profilo</button>
+    <button mat-menu-item (click)="logOut()">Logout</button>
+  </ng-template>
+</mat-menu>
