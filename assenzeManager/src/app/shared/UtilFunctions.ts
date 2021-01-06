@@ -1,5 +1,6 @@
 import {GiornataCalendario} from '../core/interfaces/Assenze';
 import {formatISO, getDayOfYear, isValid} from 'date-fns/esm';
+import {FormGroup} from '@angular/forms';
 
 export class UtilFunctions {
 
@@ -25,5 +26,13 @@ export class UtilFunctions {
 
   static isVoid(val: any) {
     return val === undefined || val === null || val === 'undefined' || val === 'null' || val === '' || val === ' ';
+  }
+
+  static resetFormAllErrors(form: FormGroup) {
+    for (const key in form.controls) {
+      if (form.controls[key]) {
+        form.controls[key].setErrors(null);
+      }
+    }
   }
 }

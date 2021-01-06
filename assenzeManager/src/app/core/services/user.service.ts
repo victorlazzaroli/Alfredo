@@ -12,13 +12,16 @@ export class UserService {
 
   constructor( private firestore: AngularFirestore, private persistenceService: PersistenceService) { }
 
-  getUserProfile(uid: string): Observable<UserInfo> {
+  getUserProfile(uid?: string): Observable<UserInfo> {
     let userProfile: UserInfo;
     userProfile = JSON.parse(this.persistenceService.retrieve('userProfile'));
     if (userProfile) {
       return of(userProfile);
     }
-    const dipendenteProfile = this.firestore.doc<UserInfo>(`dipendente/${uid}`);
+    if (!uid) {
+      return of(undefined);
+    }
+    const dipendenteProfile = this.firestore.doc<UserInfo>(`dipendenti/${uid}`);
     return dipendenteProfile.get().pipe(map(user => {
       if (user?.exists) {
         this.persistenceService.save('userProfile', JSON.stringify(user.data()));
@@ -28,17 +31,17 @@ export class UserService {
   }
 
   createProfile(userInfo: UserInfo): Observable<Promise<void>> {
-    const dipendenteProfile = this.firestore.doc<UserInfo>(`dipendente/${userInfo.uid}`);
+    const dipendenteProfile = this.firestore.doc<UserInfo>(`dipendenti/${userInfo.uid}`);
     return of(dipendenteProfile.set(userInfo));
   }
 
   updateProfile(userInfo: Partial<UserInfo>): Observable<Promise<void>> {
-    const dipendenteProfile = this.firestore.doc<UserInfo>(`dipendente/${userInfo.uid}`);
+    const dipendenteProfile = this.firestore.doc<UserInfo>(`dipendenti/${userInfo.uid}`);
     return of(dipendenteProfile.update(userInfo));
   }
 
   deleteProfile(uid: string): Observable<Promise<void>> {
-    const dipendenteProfile = this.firestore.doc<UserInfo>(`dipendente/${uid}`);
+    const dipendenteProfile = this.firestore.doc<UserInfo>(`dipendenti/${uid}`);
     return of(dipendenteProfile.delete());
   }
 }

@@ -39,5 +39,5 @@ export interface Day extends AssenzaDipendente {
   isHoliday: boolean;
   isGiornataAssenza: boolean;
   isOreAssenza: boolean;
-  oreDiAssenza?: string;
+  tooltipText?: string;
 }

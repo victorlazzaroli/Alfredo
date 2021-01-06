@@ -16,7 +16,7 @@ export class AssenzeService {
 
   async nuovaAssenza(assenza: AssenzaDipendente) {
     return this.firestore.firestore.runTransaction( async transaction => {
-      const dipendenteRef = this.firestore.doc(`/dipendente/${assenza.dipendente}`).ref;
+      const dipendenteRef = this.firestore.doc(`/dipendenti/${assenza.dipendente}`).ref;
       if (dipendenteRef) {
         const snap = await transaction.get(dipendenteRef);
         const dipendente = snap.data() as UserInfo;
@@ -59,7 +59,7 @@ export class AssenzeService {
 
   async cancellaAssenza(uid: string, data: Date | string) {
     return this.firestore.firestore.runTransaction( async transaction => {
-      const dipendenteRef = this.firestore.doc(`/dipendente/${uid}`).ref;
+      const dipendenteRef = this.firestore.doc(`/dipendenti/${uid}`).ref;
       if (dipendenteRef) {
         const snap = await transaction.get(dipendenteRef);
         const dipendente = snap.data() as UserInfo;

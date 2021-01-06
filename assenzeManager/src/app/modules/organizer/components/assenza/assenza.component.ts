@@ -10,6 +10,10 @@ import {formatISO, getDayOfYear, isValid, isWithinInterval} from 'date-fns/esm';
 import firebase from 'firebase/app';
 import {isMoment} from 'moment/moment';
 import {AssenzeService} from '../../services/assenze.service';
+import {UtilFunctions} from '../../../../shared/UtilFunctions';
+import {CustomShackbarService} from '../../../../core/services/custom-shackbar.service';
+import {UserService} from '../../../../core/services/user.service';
+import {AuthService} from '../../../../core/services/auth.service';
 
 enum TipoAssenzaEnum {
   PAR = 'PAR',
@@ -23,6 +27,7 @@ enum TipoAssenzaEnum {
   styleUrls: ['./assenza.component.scss']
 })
 export class AssenzaComponent implements OnInit {
+  currentProfile$: Observable<UserInfo>;
 
   @Input('assenza')
   set _assenza(val: AssenzaDipendente) {
@@ -47,6 +52,9 @@ export class AssenzaComponent implements OnInit {
   TipoAssenzaEnum = TipoAssenzaEnum;
 
   constructor(private formBuilder: FormBuilder,
+              private userService: UserService,
+              private snackBar: CustomShackbarService,
+              private authService: AuthService,
               private assenzaService: AssenzeService,
               private firestore: AngularFirestore) {
 
@@ -65,6 +73,8 @@ export class AssenzaComponent implements OnInit {
       oraFine: [null]
     });
 
+    this.authService.getAuthUser().subscribe( user => this.form.controls.dipendente.patchValue(user.uid, { emitEvent: true}));
+
     this.form.controls.tipoAssenza.valueChanges.subscribe(value => {
       if (value !== TipoAssenzaEnum.FERIE && value !== TipoAssenzaEnum.MALATTIA && value !== null) {
         this.form.controls.frazioneDiGiornata.patchValue(true, { emitEvent: true});
@@ -72,12 +82,12 @@ export class AssenzaComponent implements OnInit {
         this.form.controls.frazioneDiGiornata.patchValue(false, { emitEvent: true});
       }
       if (value === TipoAssenzaEnum.MALATTIA || value === TipoAssenzaEnum.FERIE) {
-        this.resetAllErrors();
+        UtilFunctions.resetFormAllErrors(this.form);
         this.form.controls.oraInizio.clearValidators();
         this.form.controls.oraFine.clearValidators();
         this.form.controls.dataFine.setValidators(Validators.required);
       } else {
-        this.resetAllErrors();
+        UtilFunctions.resetFormAllErrors(this.form);
         this.form.controls.oraInizio.setValidators(Validators.required);
         this.form.controls.oraFine.setValidators(Validators.required);
         this.form.controls.dataFine.clearValidators();
@@ -86,7 +96,7 @@ export class AssenzaComponent implements OnInit {
 
     this.form.controls.frazioneDiGiornata.valueChanges.subscribe(value => {
       if (value) {
-        this.resetAllErrors();
+        UtilFunctions.resetFormAllErrors(this.form);
         this.form.controls.oraInizio.setValidators(Validators.required);
         this.form.controls.oraFine.setValidators(Validators.required);
         this.form.controls.dataFine.clearValidators();
@@ -95,11 +105,12 @@ export class AssenzaComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.currentProfile$ = this.userService.getUserProfile();
     this.getDipendenti();
   }
 
   getDipendenti() {
-    const dipendentiCollection = this.firestore.collection<UserInfo>('dipendente');
+    const dipendentiCollection = this.firestore.collection<UserInfo>('dipendenti');
     this.dipendenti = dipendentiCollection.get().pipe(map(dipendenti => {
       return dipendenti.docs.map(dipendente => dipendente.data());
     }), first());
@@ -109,42 +120,47 @@ export class AssenzaComponent implements OnInit {
     if (this.form.invalid) {
       alert('FORM INVALIDO');
       this.form.reset();
-      this.resetAllErrors();
+      UtilFunctions.resetFormAllErrors(this.form);
       this.isModifica = false;
       return;
     }
     if (this.isModifica) {
       const data = new Date(this.assenza.dataInizio);
-      await this.assenzaService.cancellaAssenza(this.assenza.dipendente, data);
-      this.isModifica = false;
+      try {
+        await this.assenzaService.cancellaAssenza(this.assenza.dipendente, data);
+      } catch (errore) {
+        this.snackBar.openSnackBar('Errore nella creazione dell\' assenza', 'Error');
+        this.form.reset();
+        this.assenza = null;
+        return;
+      } finally {
+        this.isModifica = false;
+      }
     }
 
     if (this.form.controls.frazioneDiGiornata.value) {
       this.form.controls.dataFine.patchValue(this.form.controls.dataInizio.value);
     }
 
-    await this.assenzaService.nuovaAssenza({
-      ...this.form.value,
+    try {
+      await this.assenzaService.nuovaAssenza({
+          ...this.form.value,
 
-      frazioneDiGiornata: !!this.form.controls.frazioneDiGiornata.value,
+          frazioneDiGiornata: !!this.form.controls.frazioneDiGiornata.value,
 
-      dataInizio: isMoment(this.form.controls.dataInizio.value) ?
-          this.form.controls.dataInizio.value.format('YYYY-MM-DD') : this.form.controls.dataInizio.value.toString(),
+          dataInizio: isMoment(this.form.controls.dataInizio.value) ?
+            this.form.controls.dataInizio.value.format('YYYY-MM-DD') : this.form.controls.dataInizio.value.toString(),
 
-      dataFine: isMoment(this.form.controls.dataFine.value) ?
-          this.form.controls.dataFine.value.format('YYYY-MM-DD') :
-          this.form.controls.dataFine.value ? this.form.controls.dataFine.value.toString() : null
-      }
-    );
+          dataFine: isMoment(this.form.controls.dataFine.value) ?
+            this.form.controls.dataFine.value.format('YYYY-MM-DD') :
+            this.form.controls.dataFine.value ? this.form.controls.dataFine.value.toString() : null
+        }
+      );
+      this.snackBar.openSnackBar('Assenza creata con successo', 'Success');
+    } catch (error) {
+      this.snackBar.openSnackBar('Errore nella creazione dell\' assenza', 'Error');
+    }
     this.form.reset();
     this.assenza = null;
-  }
-
-  private resetAllErrors() {
-    for (const key in this.form.controls) {
-      if (this.form.controls[key]) {
-        this.form.controls[key].setErrors(null);
-      }
-    }
   }
 }

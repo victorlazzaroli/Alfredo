@@ -1,0 +1,12 @@
+mat-icon {
+  color: green;
+}
+
+.snack-container {
+  display: flex;
+  flex-direction: row;
+
+  #message {
+    flex-grow: 1;
+  }
+}

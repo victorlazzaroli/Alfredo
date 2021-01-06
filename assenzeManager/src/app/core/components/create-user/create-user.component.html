@@ -1,1 +1,52 @@
-<p>create-user works!</p>
+<mat-card>
+  <mat-card-title>Profilo Utente</mat-card-title>
+  <form class="authForm" [formGroup]="profileForm">
+    <mat-form-field style="margin-top: 1rem">
+      <mat-label>Dipendente</mat-label>
+      <input matInput name="AIFredoName" type="text" formControlName="displayName">
+    </mat-form-field>
+    <mat-form-field style="margin-top: 1rem">
+      <mat-label>Email</mat-label>
+      <input matInput name="AIFredoEmail" formControlName="email">
+    </mat-form-field>
+    <mat-form-field style="margin-top: 1rem">
+      <mat-label>Password</mat-label>
+      <input matInput name="AIFredoPassword" formControlName="password">
+      <mat-hint>La password deve essere lunga almeno 6 caratteri</mat-hint>
+    </mat-form-field>
+    <mat-form-field style="margin-top: 1rem">
+      <mat-label>Ruolo</mat-label>
+      <mat-chip-list #chipList aria-label="Ruolo selection">
+        <mat-chip
+          *ngFor="let ruolo of ruoliSelezionati"
+          [selectable]="selectable"
+          [removable]="removable"
+          (removed)="remove(ruolo)">
+          {{ruolo}}
+          <mat-icon matChipRemove *ngIf="removable">Elimina</mat-icon>
+        </mat-chip>
+        <input
+          placeholder="Nuovo Ruolo..."
+          #fruitInput
+          formControlName="ruoli"
+          [disabled]="true"
+          [matAutocomplete]="auto"
+          [matChipInputFor]="chipList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          (matChipInputTokenEnd)="add($event)">
+      </mat-chip-list>
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+        <mat-option *ngFor="let ruolo of filteredRuoli | async" [value]="ruolo">
+          {{ruolo}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <div class="nota">
+      <p>* campi obbligatori</p>
+    </div>
+    <div class="align-right mt-7">
+      <button mat-raised-button (click)="creaUtente()" class="align-right" color="primary">Invia</button>
+    </div>
+  </form>
+
+</mat-card>

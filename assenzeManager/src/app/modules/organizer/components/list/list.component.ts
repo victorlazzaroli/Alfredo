@@ -5,9 +5,10 @@ import {UserInfo} from '../../../../core/interfaces/UserInfo';
 import {AssenzaDipendente, Day, GiornataCalendario} from '../../../../core/interfaces/Assenze';
 import * as _ from 'lodash';
 import {AssenzeService} from '../../services/assenze.service';
-import {isValid} from 'date-fns/esm';
+import {formatISO, isValid} from 'date-fns/esm';
 import {first, takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
+import {UserService} from '../../../../core/services/user.service';
 
 @Component({
   selector: 'app-list',
@@ -24,14 +25,18 @@ export class ListComponent implements OnInit, OnDestroy {
   currentMonth: number;
   currentYear: number;
   destroy$: Subject<boolean> = new Subject<boolean>();
+  currentProfile: UserInfo;
 
-  constructor(private firestore: AngularFirestore, private assenzaService: AssenzeService) {
+  constructor(private firestore: AngularFirestore,
+              private userService: UserService,
+              private assenzaService: AssenzeService) {
     this.currentDate = new Date();
     this.currentMonth = this.currentDate.getMonth();
     this.currentYear = this.currentDate.getUTCFullYear();
   }
 
   ngOnInit(): void {
+    this.userService.getUserProfile().subscribe( profile => this.currentProfile = profile);
     this.getDipendenti();
   }
 
@@ -40,7 +45,7 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   getDipendenti() {
-    this.firestore.collection<UserInfo>('dipendente')
+    this.firestore.collection<UserInfo>('dipendenti')
       .valueChanges()
       .pipe(first())
       .subscribe(dipendenti => {
@@ -83,9 +88,8 @@ export class ListComponent implements OnInit, OnDestroy {
                   isHoliday: this.tabellaDipendentiAssenze[idxDipendente][giorno - 1].isHoliday,
                   isGiornataAssenza: !dipendenteAssente.frazioneDiGiornata,
                   isOreAssenza: dipendenteAssente.frazioneDiGiornata,
-                  oreDiAssenza: dipendenteAssente.frazioneDiGiornata ?
-                    `Assente dalle ${dipendenteAssente.oraInizio}:00 alle ${dipendenteAssente.oraFine}:00` :
-                    'Assente per tutta la giornata'
+                  tooltipText: this.tabellaDipendentiAssenze[idxDipendente][giorno - 1].isHoliday ?
+                    null : this.getTooltip(dipendenteAssente)
                 };
               });
             });
@@ -107,8 +111,19 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
 
-  async modificaAssenza(dipendente: number, giornata: number) {
-    this.modificaAssenzaEvento.emit({...this.tabellaDipendentiAssenze[dipendente][giornata]});
+  async modificaAssenza(dipendente: number, giornata: number, modifica: boolean = true) {
+    if (modifica) {
+      this.modificaAssenzaEvento.emit({...this.tabellaDipendentiAssenze[dipendente][giornata]});
+    } else {
+      const data = new Date(this.currentYear, this.currentMonth, giornata);
+      this.modificaAssenzaEvento.emit({
+        dipendente: this.dipendenti[dipendente].uid,
+        tipoAssenza: 'FERIE',
+        frazioneDiGiornata: false,
+        dataInizio: formatISO(data, {representation: 'date'}),
+        dataFine: formatISO(data, {representation: 'date'}),
+      });
+    }
   }
 
   async deleteAssenza(dipendente: number, giornata: number) {
@@ -137,5 +152,39 @@ export class ListComponent implements OnInit, OnDestroy {
       this.currentMonth += 1;
     }
     this.getAssenze(this.currentYear, this.currentMonth);
+  }
+
+  getTooltip(day: AssenzaDipendente): string {
+    let tooltip: string;
+    switch (day.tipoAssenza) {
+      case 'FERIE':
+        tooltip = 'Assente per tutta la gioranata';
+        break;
+      case 'PAR':
+        if (day.frazioneDiGiornata) {
+          tooltip = `Assente dalle ${day.oraInizio}:00 alle ${day.oraFine}:00` ;
+        } else {
+          tooltip = 'Assente per tutta la gioranata';
+        }
+        break;
+      case 'MALATTIA':
+        if (day.frazioneDiGiornata) {
+          tooltip = `Malattia dalle ${day.oraInizio}:00 alle ${day.oraFine}:00` ;
+        } else {
+          tooltip = 'Assente per malattia tutta la gioranata';
+        }
+        break;
+      case 'ALTRO':
+        tooltip = day.descrizioneAltro;
+        break;
+      default:
+        if (day.frazioneDiGiornata) {
+          tooltip = `Assente dalle ${day.oraInizio}:00 alle ${day.oraFine}:00` ;
+        } else {
+          tooltip = 'Assente per tutta la gioranata';
+        }
+    }
+
+    return tooltip;
   }
 }

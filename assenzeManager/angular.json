@@ -135,8 +135,5 @@
       }
     }
   },
-  "defaultProject": "assenzeManager",
-  "cli": {
-    "defaultCollection": "@ngrx/schematics"
-  }
+  "defaultProject": "assenzeManager"
 }

@@ -18,7 +18,7 @@ import {ActivatedRoute} from '@angular/router';
 export class ProfileComponent implements OnInit {
   visible = true;
   selectable = true;
-  removable = true;
+  removable = false;
   separatorKeysCodes: number[] = [ENTER, COMMA];
   ruoliList = [RuoloEnum.ANALISI, RuoloEnum.FRONTEND, RuoloEnum.BACKEND, RuoloEnum.MOBILE];
   ruoliSelezionati = [];
@@ -34,7 +34,7 @@ export class ProfileComponent implements OnInit {
     this.profileForm = this.formBuilder.group({
       displayName: [null, Validators.required],
       email: [null, Validators.required],
-      ruoli: [[]]
+      ruoli: []
     });
 
     this.filteredRuoli = this.profileForm.controls.ruoli.valueChanges.pipe(
@@ -47,7 +47,10 @@ export class ProfileComponent implements OnInit {
     if (uid) {
       this.userService.getUserProfile(uid)
         .subscribe(
-          profile => this.profileForm.patchValue(profile, {emitEvent: true}),
+          profile => {
+            this.profileForm.patchValue(profile, {emitEvent: true});
+            this.ruoliSelezionati = [...profile?.ruoli];
+          },
           error => console.log(error)
         );
     }

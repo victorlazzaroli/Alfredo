@@ -20,7 +20,7 @@ const routes: Routes = [
     data: {authGuardPipe: redirectUnauthorizedToLogin}
   },
   {
-    path: 'newUser',
+    path: 'nuovoUtente',
     component: CreateUserComponent,
     canActivate: [AngularFireAuthGuard],
     data: {authGuardPipe: redirectUnauthorizedToLogin}

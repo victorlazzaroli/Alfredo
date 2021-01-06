@@ -33,6 +33,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatIconModule} from '@angular/material/icon';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { MySnackbarComponent } from './core/components/my-snackbar/my-snackbar.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +44,8 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     HeaderComponent,
     NotFoundComponent,
     ProfileComponent,
-    CreateUserComponent
+    CreateUserComponent,
+    MySnackbarComponent
   ],
   imports: [
     BrowserModule,
@@ -71,7 +74,8 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     MatMenuModule,
     MatIconModule,
     MatChipsModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

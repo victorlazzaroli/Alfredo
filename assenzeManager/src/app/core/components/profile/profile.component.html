@@ -3,7 +3,7 @@
   <form class="authForm" [formGroup]="profileForm">
     <mat-form-field style="margin-top: 1rem">
       <mat-label>Dipendente</mat-label>
-      <input matInput name="AIFredoName" type="text" formControlName="displayName">
+      <input matInput name="AIFredoName" type="text" formControlName="displayName" [disabled]="true">
     </mat-form-field>
     <mat-form-field style="margin-top: 1rem">
       <mat-label>Email</mat-label>
@@ -11,7 +11,7 @@
     </mat-form-field>
     <mat-form-field style="margin-top: 1rem">
       <mat-label>Ruolo</mat-label>
-      <mat-chip-list #chipList aria-label="Ruolo selection">
+      <mat-chip-list #chipList aria-label="Ruolo selection" formControlName="ruoli">
         <mat-chip
           *ngFor="let ruolo of ruoliSelezionati"
           [selectable]="selectable"
@@ -23,7 +23,7 @@
         <input
           placeholder="Nuovo Ruolo..."
           #fruitInput
-          formControlName="ruoli"
+          [disabled]="true"
           [matAutocomplete]="auto"
           [matChipInputFor]="chipList"
           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
@@ -37,3 +37,6 @@
     </mat-form-field>
   </form>
 </mat-card>
+
+<!--<div class="mat-elevation-z2">-->
+<!--</div>-->

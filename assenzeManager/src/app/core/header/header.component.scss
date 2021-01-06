@@ -28,6 +28,34 @@
 
   .menu {
     flex-grow: 1;
+
+    ul {
+      margin-left: 2rem;
+      list-style-type: none;
+
+      li {
+        float: left;
+        cursor: pointer;
+
+        a {
+          display: block;
+          color: #3f51b5;
+          text-align: center;
+          padding: 16px;
+          text-decoration: none;
+        }
+
+        a:hover, a:active {
+          color: white;
+          background: #99a5e5;
+        }
+
+        .active {
+          color: white;
+          background: #3f51b5;
+        }
+      }
+    }
   }
 
   .userMenu {

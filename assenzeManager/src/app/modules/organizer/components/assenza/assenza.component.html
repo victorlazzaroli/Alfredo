@@ -7,7 +7,7 @@
 
         <mat-form-field appearance="fill">
           <mat-label>Dipendente*</mat-label>
-          <mat-select formControlName="dipendente">
+          <mat-select formControlName="dipendente" [disabled]="(currentProfile$ | async)?.autorizzazione === 'DIPENDENTE'">
             <mat-option [value]="dipendente.uid" *ngFor="let dipendente of dipendenti | async">{{dipendente?.displayName}}</mat-option>
           </mat-select>
         </mat-form-field>

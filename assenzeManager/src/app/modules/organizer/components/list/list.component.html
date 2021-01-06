@@ -1,52 +1,67 @@
-<div class="listaContainer mat-elevation-z2" *ngIf="dipendenti?.length > 0 && tabellaDipendentiAssenze?.length > 0">
-  <div class="leftEmpty">.</div>
-  <div class="tableContainer">
-    <div class="empty"></div>
-    <div class="monthYear">
-      <mat-icon (click)="prevMonth()">chevron_left</mat-icon>
-      {{currentDate | date:'MMMM, YYYY'}}
-      <mat-icon (click)="nextMonth()">chevron_right</mat-icon>
+<div class="externalContainer mat-elevation-z2">
+  <h1>Lista di assenze</h1>
+  <div class="listaContainer" *ngIf="dipendenti?.length > 0 && tabellaDipendentiAssenze?.length > 0">
+    <div class="leftEmpty">.</div>
+    <div class="tableContainer">
+      <div class="empty"></div>
+      <div class="monthYear">
+        <mat-icon (click)="prevMonth()">chevron_left</mat-icon>
+        {{currentDate | date:'MMMM, YYYY'}}
+        <mat-icon (click)="nextMonth()">chevron_right</mat-icon>
+      </div>
+      <div class="scrollingContainer">
+        <table>
+          <thead>
+          <tr>
+            <th></th>
+            <th [colSpan]="tabellaDipendentiAssenze[0].length">
+              <div class="monthYearHeader"></div>
+            </th>
+          </tr>
+          <tr>
+            <th></th>
+            <th *ngFor="let day of tabellaDipendentiAssenze[0]; let dayIdx = index">
+              <div class="dayCell">{{ dayIdx + 1 }}</div>
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let dipendente of dipendenti; let dipendenteIdx = index">
+            <td>
+              <div class="nomeDipendente">{{ dipendente.displayName }}</div>
+            </td>
+            <ng-container *ngFor="let day of tabellaDipendentiAssenze[dipendenteIdx]; let dayIdx = index">
+              <td *ngIf="currentProfile.uid === dipendente.uid"
+                  [matMenuTriggerFor]="appMenu"
+                  [matMenuTriggerData]="{dipendente: dipendenteIdx, giornata: dayIdx, assenza: day.isGiornataAssenza || day.isOreAssenza, holiday: day.isHoliday }"
+                  [matTooltip]="day.tooltipText"
+                  [ngStyle]="{ 'background-color': (day?.isHoliday ? 'rgb(206, 203, 203)' : day?.isGiornataAssenza ? 'red' : day?.isOreAssenza ? 'orange' : 'white')}">
+              </td>
+              <td *ngIf="currentProfile.uid !== dipendente.uid"
+                  [matTooltip]="day.tooltipText"
+                  [ngStyle]="{ 'background-color': (day?.isHoliday ? 'rgb(206, 203, 203)' : day?.isGiornataAssenza ? 'red' : day?.isOreAssenza ? 'orange' : 'white')}">
+              </td>
+            </ng-container>
+          </tr>
+          </tbody>
+        </table>
+        <mat-menu #appMenu="matMenu">
+          <ng-template matMenuContent let-dipendente="dipendente" let-giornata="giornata" let-assenza="assenza"
+                       let-holiday="holiday">
+            <button mat-menu-item (click)="deleteAssenza(dipendente, giornata)" *ngIf="!holiday && assenza">Cancella
+              Assenza
+            </button>
+            <button mat-menu-item (click)="modificaAssenza(dipendente, giornata)" *ngIf="!holiday && assenza">Modifica
+            </button>
+            <button mat-menu-item (click)="modificaAssenza(dipendente, giornata, false)" *ngIf="!holiday && !assenza">Aggiungi
+              Assenza
+            </button>
+            <button mat-menu-item *ngIf="holiday">Giornata non lavorativa</button>
+          </ng-template>
+        </mat-menu>
+      </div>
     </div>
-    <div class="scrollingContainer">
-      <table>
-        <thead>
-        <tr>
-          <th></th>
-          <th [colSpan]="tabellaDipendentiAssenze[0].length">
-            <div class="monthYearHeader"></div>
-          </th>
-        </tr>
-        <tr>
-          <th></th>
-          <th *ngFor="let day of tabellaDipendentiAssenze[0]; let dayIdx = index">
-            <div class="dayCell">{{ dayIdx + 1 }}</div>
-          </th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let dipendente of dipendenti; let dipendenteIdx = index">
-          <td>
-            <div class="nomeDipendente">{{ dipendente.displayName }}</div>
-          </td>
-          <td *ngFor="let day of tabellaDipendentiAssenze[dipendenteIdx]; let dayIdx = index"
-              [matMenuTriggerFor]="appMenu"
-              [matMenuTriggerData]="{dipendente: dipendenteIdx, giornata: dayIdx, assenza: day.isGiornataAssenza || day.isOreAssenza, holiday: day.isHoliday }"
-              [matTooltip]="day.isHoliday ? null : day.isGiornataAssenza ? 'Dipendente assente per tutta la gioranata': day.oreDiAssenza"
-              [ngStyle]="{ 'background-color': (day?.isHoliday ? 'rgb(206, 203, 203)' : day?.isGiornataAssenza ? 'red' : day?.isOreAssenza ? 'orange' : 'white')}">
-          </td>
-        </tr>
-        </tbody>
-      </table>
-      <mat-menu #appMenu="matMenu">
-        <ng-template matMenuContent let-dipendente="dipendente" let-giornata="giornata" let-assenza="assenza" let-holiday="holiday">
-          <button mat-menu-item (click)="deleteAssenza(dipendente, giornata)" *ngIf="!holiday && assenza">Cancella Assenza</button>
-          <button mat-menu-item (click)="modificaAssenza(dipendente, giornata)" *ngIf="!holiday && assenza">Modifica</button>
-          <button mat-menu-item (click)="modificaAssenza(dipendente, giornata)" *ngIf="!holiday && !assenza">Aggiungi Assenza</button>
-          <button mat-menu-item *ngIf="holiday">Giornata non lavorativa</button>
-        </ng-template>
-      </mat-menu>
-    </div>
+    <div class="rightEmpty">.</div>
   </div>
-  <div class="rightEmpty">.</div>
 </div>
 
