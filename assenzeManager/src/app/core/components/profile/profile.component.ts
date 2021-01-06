@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MatAutocompleteSelectedEvent, MatAutocomplete} from '@angular/material/autocomplete';
 import {MatChipInputEvent} from '@angular/material/chips';
@@ -10,13 +10,15 @@ import {UserService} from '../../services/user.service';
 import {AuthService} from '../../services/auth.service';
 import {ActivatedRoute} from '@angular/router';
 import {AssenzaDipendente} from '../../interfaces/Assenze';
+import {MatSort} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material/table';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, AfterViewInit {
   visible = true;
   selectable = true;
   removable = false;
@@ -27,13 +29,13 @@ export class ProfileComponent implements OnInit {
   profileForm: FormGroup;
   @ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
-  assenze: AssenzaDipendente[];
+  @ViewChild(MatSort) sort: MatSort;
+  assenze: MatTableDataSource<AssenzaDipendente> = new MatTableDataSource([]);
   displayedColumns: string[] = ['tipoAssenza', 'dataInizio', 'dataFine'];
 
   constructor(private formBuilder: FormBuilder,
               private route: ActivatedRoute,
-              private userService: UserService,
-              private authService: AuthService) {
+              private userService: UserService) {
     this.profileForm = this.formBuilder.group({
       displayName: [null, Validators.required],
       email: [null, Validators.required],
@@ -53,11 +55,15 @@ export class ProfileComponent implements OnInit {
           profile => {
             this.profileForm.patchValue(profile, {emitEvent: true});
             this.ruoliSelezionati = [...profile?.ruoli];
-            this.assenze = [...profile.assenze];
+            this.assenze = new MatTableDataSource([...profile.assenze]);
           },
           error => console.log(error)
         );
     }
+  }
+
+  ngAfterViewInit() {
+    this.assenze.sort = this.sort;
   }
 
   add(event: MatChipInputEvent): void {
