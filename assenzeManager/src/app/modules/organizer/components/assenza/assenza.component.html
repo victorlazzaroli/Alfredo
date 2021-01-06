@@ -8,7 +8,7 @@
         <mat-form-field appearance="fill">
           <mat-label>Dipendente*</mat-label>
           <mat-select formControlName="dipendente">
-            <mat-option [value]="dipendente.uid" *ngFor="let dipendente of dipendenti | async">{{dipendente?.name}}</mat-option>
+            <mat-option [value]="dipendente.uid" *ngFor="let dipendente of dipendenti | async">{{dipendente?.displayName}}</mat-option>
           </mat-select>
         </mat-form-field>
 

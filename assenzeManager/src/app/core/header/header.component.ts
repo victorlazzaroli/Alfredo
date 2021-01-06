@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {AuthService} from '../services/auth.service';
 import {Observable} from 'rxjs';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import firebase from 'firebase';
 import User = firebase.User;
 
@@ -11,20 +11,23 @@ import User = firebase.User;
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  user: User;
+  user$: Observable<User>;
+  private uid: string;
 
 
-  constructor(private authService: AuthService,  private router: Router) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
-    this.authService.getAuthUser().subscribe( user => this.user = user);
+    this.user$ = this.authService.getAuthUser().pipe();
+    this.user$.subscribe(userProfile => this.uid = userProfile.uid);
   }
 
   goToProfile() {
-    this.router.navigate(['/profile']);
+    this.router.navigate(['/profile/', this.uid]);
   }
 
-  logOut() {
-    this.authService.logOut().subscribe(val => this.router.navigate(['/login']));
+  async logOut() {
+    await this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

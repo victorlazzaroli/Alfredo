@@ -15,17 +15,12 @@ import { AuthService } from './core/services/auth.service';
 })
 export class AppComponent implements OnInit {
 
-  user: Observable<any>;
+  user$: Observable<any>;
 
   constructor(private authService: AuthService, private router: Router) {
   }
 
   ngOnInit() {
-    // this.user = this.authService.getAuthUser();
-    // this.user.subscribe(authUser => {
-    //   if (!authUser) {
-    //     this.router.navigate(['/login']);
-    //   }
-    // });
+    this.user$ = this.authService.getAuthUser();
   }
 }

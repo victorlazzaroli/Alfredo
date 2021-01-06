@@ -1,7 +1,7 @@
 <nav class="mainNav">
   <div class="logo"><a href="/" target="_self"><h1><strong>Ai</strong>fredo</h1></a></div>
   <div class="menu"></div>
-  <div class="userMenu" [matMenuTriggerFor]="appMenu"> {{ user.displayName }}</div>
+  <div class="userMenu" [matMenuTriggerFor]="appMenu"> {{ (user$ | async)?.displayName }}</div>
 </nav>
 <mat-menu #appMenu="matMenu">
   <ng-template matMenuContent>

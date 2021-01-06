@@ -1,4 +1,4 @@
-<div class="listaContainer" *ngIf="dipendenti?.length > 0 && tabellaDipendentiAssenze?.length > 0">
+<div class="listaContainer mat-elevation-z2" *ngIf="dipendenti?.length > 0 && tabellaDipendentiAssenze?.length > 0">
   <div class="leftEmpty">.</div>
   <div class="tableContainer">
     <div class="empty"></div>
@@ -26,7 +26,7 @@
         <tbody>
         <tr *ngFor="let dipendente of dipendenti; let dipendenteIdx = index">
           <td>
-            <div class="nomeDipendente">{{ dipendente.name }}</div>
+            <div class="nomeDipendente">{{ dipendente.displayName }}</div>
           </td>
           <td *ngFor="let day of tabellaDipendentiAssenze[dipendenteIdx]; let dayIdx = index"
               [matMenuTriggerFor]="appMenu"

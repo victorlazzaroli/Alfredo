@@ -7,6 +7,8 @@ import {UserInfo} from '../interfaces/UserInfo';
 import firebase from 'firebase/app';
 import {AngularFireAuth} from '@angular/fire/auth';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AuthService} from '../services/auth.service';
+import {first, map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-authentication',
@@ -15,10 +17,6 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 })
 export class AuthenticationComponent implements OnInit {
 
-  private dipendentiCollection: AngularFirestoreCollection<UserInfo>;
-  dipendenti: Observable<UserInfo[]>;
-
-  providers = AuthProvider;
   authForm: FormGroup;
   visibility = false;
   error: boolean;
@@ -26,7 +24,7 @@ export class AuthenticationComponent implements OnInit {
   constructor(
     private firestore: AngularFirestore,
     private formBuilder: FormBuilder,
-    public afAuth: AngularFireAuth,
+    public authService: AuthService,
     private router: Router) {
     this.authForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -35,39 +33,7 @@ export class AuthenticationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-  }
-
-  onSuccess(userData: any) {
-    if (!userData) {
-      return;
-    }
-
-    this.router.navigate(['/home']);
-
-    // if (!userData.emailVerified) {
-    //   this.dipendentiCollection = this.firestore.collection<UserInfo>('dipendente');
-    //   const condition = this.dipendentiCollection.ref.where('email', '==', userData.email);
-
-    //   condition.get()
-    //   .then(element => {
-    //     if (element.empty) {
-    //       const userInfo: UserInfo = {
-    //         uid: userData.uid,
-    //         ruolo: null,
-    //         name: userData.displayName,
-    //         email: userData.email,
-    //         autorizzazione: Autorizzazioni.DIPENDENTE
-    //       };
-    //       this.dipendentiCollection.add(userInfo);
-    //     } else {
-    //       console.log('Utente già presente a DB e email non verificata');
-    //     }
-    //   })
-    //   .catch( err => console.error('Errore: ', err));
-    // } else {
-    //   this.router.navigate(['home']);
-    // }
+    this.authService.getAuthUser().subscribe( user => user ? this.router.navigate(['/assenze']) : null);
   }
 
   printError(event) {
@@ -76,16 +42,15 @@ export class AuthenticationComponent implements OnInit {
 
   login() {
     if (this.authForm.valid) {
-      this.afAuth.signInWithEmailAndPassword(this.authForm.controls.email.value, this.authForm.controls.password.value)
+      this.authService.login(this.authForm.controls.email.value, this.authForm.controls.password.value)
         .then(user => {
           this.error = false;
-          console.log(user);
         })
         .catch(error => this.error = true);
     }
   }
 
   logout() {
-    this.afAuth.signOut();
+    this.authService.logout().finally(() => console.log('Sign Out'));
   }
 }
