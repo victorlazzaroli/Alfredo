@@ -1,5 +1,5 @@
 <mat-card>
-  <mat-card-title>Profilo Utente</mat-card-title>
+  <mat-card-title>Creazione Utente</mat-card-title>
   <form class="authForm" [formGroup]="profileForm">
     <mat-form-field style="margin-top: 1rem">
       <mat-label>Dipendente</mat-label>
@@ -23,13 +23,12 @@
           [removable]="removable"
           (removed)="remove(ruolo)">
           {{ruolo}}
-          <mat-icon matChipRemove *ngIf="removable">Elimina</mat-icon>
+          <mat-icon matChipRemove *ngIf="removable">delete</mat-icon>
         </mat-chip>
         <input
           placeholder="Nuovo Ruolo..."
           #fruitInput
           formControlName="ruoli"
-          [disabled]="true"
           [matAutocomplete]="auto"
           [matChipInputFor]="chipList"
           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"

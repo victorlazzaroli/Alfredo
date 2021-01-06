@@ -35,6 +35,8 @@ import {MatChipsModule} from '@angular/material/chips';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { MySnackbarComponent } from './core/components/my-snackbar/my-snackbar.component';
+import {MatTableModule} from '@angular/material/table';
+import {MatSortModule} from '@angular/material/sort';
 
 @NgModule({
   declarations: [
@@ -75,7 +77,9 @@ import { MySnackbarComponent } from './core/components/my-snackbar/my-snackbar.c
     MatIconModule,
     MatChipsModule,
     MatAutocompleteModule,
-    MatSnackBarModule
+    MatTableModule,
+    MatSnackBarModule,
+    MatSortModule
   ],
   providers: [],
   bootstrap: [AppComponent]

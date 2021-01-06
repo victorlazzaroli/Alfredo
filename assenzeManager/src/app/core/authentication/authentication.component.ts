@@ -8,7 +8,8 @@ import firebase from 'firebase/app';
 import {AngularFireAuth} from '@angular/fire/auth';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../services/auth.service';
-import {first, map} from 'rxjs/operators';
+import {first, map, switchMap} from 'rxjs/operators';
+import {UserService} from '../services/user.service';
 
 @Component({
   selector: 'app-authentication',
@@ -23,6 +24,7 @@ export class AuthenticationComponent implements OnInit {
 
   constructor(
     private firestore: AngularFirestore,
+    private userService: UserService,
     private formBuilder: FormBuilder,
     public authService: AuthService,
     private router: Router) {
@@ -33,7 +35,11 @@ export class AuthenticationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.authService.getAuthUser().subscribe( user => user ? this.router.navigate(['/assenze']) : null);
+    this.authService.getAuthUser()
+      .pipe(
+        switchMap(user => (user as firebase.User) ? this.userService.getUserProfile((user as firebase.User).uid) : null)
+      )
+      .subscribe( user => user ? this.router.navigate(['/assenze']) : null);
   }
 
   printError(event) {
@@ -44,6 +50,7 @@ export class AuthenticationComponent implements OnInit {
     if (this.authForm.valid) {
       this.authService.login(this.authForm.controls.email.value, this.authForm.controls.password.value)
         .then(user => {
+          this.userService.getUserProfile(user.user.uid).subscribe();
           this.error = false;
         })
         .catch(error => this.error = true);

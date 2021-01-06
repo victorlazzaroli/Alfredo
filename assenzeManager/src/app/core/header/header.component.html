@@ -8,7 +8,7 @@
       >Creazione Utenza</a></li>
     </ul>
   </div>
-  <div class="userMenu" [matMenuTriggerFor]="appMenu"> {{ (user$ | async)?.displayName }}</div>
+  <div class="userMenu" [matMenuTriggerFor]="appMenu"><mat-icon>face</mat-icon> {{ (user$ | async)?.displayName }}</div>
 </nav>
 <mat-menu #appMenu="matMenu">
   <ng-template matMenuContent>

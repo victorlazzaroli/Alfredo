@@ -9,6 +9,7 @@ import {map, startWith, switchMap} from 'rxjs/operators';
 import {UserService} from '../../services/user.service';
 import {AuthService} from '../../services/auth.service';
 import {ActivatedRoute} from '@angular/router';
+import {AssenzaDipendente} from '../../interfaces/Assenze';
 
 @Component({
   selector: 'app-profile',
@@ -26,6 +27,8 @@ export class ProfileComponent implements OnInit {
   profileForm: FormGroup;
   @ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
+  assenze: AssenzaDipendente[];
+  displayedColumns: string[] = ['tipoAssenza', 'dataInizio', 'dataFine'];
 
   constructor(private formBuilder: FormBuilder,
               private route: ActivatedRoute,
@@ -50,6 +53,7 @@ export class ProfileComponent implements OnInit {
           profile => {
             this.profileForm.patchValue(profile, {emitEvent: true});
             this.ruoliSelezionati = [...profile?.ruoli];
+            this.assenze = [...profile.assenze];
           },
           error => console.log(error)
         );

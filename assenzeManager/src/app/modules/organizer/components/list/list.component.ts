@@ -141,7 +141,9 @@ export class ListComponent implements OnInit, OnDestroy {
     } else {
       this.currentMonth -= 1;
     }
-    this.getAssenze(this.currentYear, this.currentMonth);
+    this.currentDate = new Date(this.currentYear, this.currentMonth);
+    this.destroy$.next();
+    this.getDipendenti();
   }
 
   nextMonth() {
@@ -151,7 +153,9 @@ export class ListComponent implements OnInit, OnDestroy {
     } else {
       this.currentMonth += 1;
     }
-    this.getAssenze(this.currentYear, this.currentMonth);
+    this.currentDate = new Date(this.currentYear, this.currentMonth);
+    this.destroy$.next();
+    this.getDipendenti();
   }
 
   getTooltip(day: AssenzaDipendente): string {

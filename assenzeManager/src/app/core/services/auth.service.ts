@@ -5,6 +5,7 @@ import {Observable, of} from 'rxjs';
 import firebase from 'firebase';
 import User = firebase.User;
 import UserCredential = firebase.auth.UserCredential;
+import {UserService} from './user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,11 +19,11 @@ export class AuthService {
 
   async login(email: string, password: string): Promise<UserCredential> {
     await this.auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
-
     return this.auth.signInWithEmailAndPassword(email, password);
   }
 
   logout(): Promise<void> {
+    this.persistenceService.freePersistence();
     return this.auth.signOut();
   }
 

@@ -14,6 +14,8 @@ import {Autorizzazioni} from '../../enum/autorizzazioni';
 import {UtilFunctions} from '../../../shared/UtilFunctions';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {CustomShackbarService} from '../../services/custom-shackbar.service';
+import {AngularFireModule} from '@angular/fire';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'app-create-user',
@@ -73,7 +75,7 @@ export class CreateUserComponent implements OnInit {
     const value = event.value;
 
     // Add our fruit
-    if ((value || '').trim()) {
+    if ((value || '').trim() && !this.ruoliSelezionati.includes(value)) {
       this.ruoliSelezionati.push(value.trim());
     }
 
@@ -94,7 +96,9 @@ export class CreateUserComponent implements OnInit {
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    this.ruoliSelezionati.push(event.option.viewValue);
+    if (!this.ruoliSelezionati.includes(event.option.viewValue)) {
+      this.ruoliSelezionati.push(event.option.viewValue);
+    }
     this.fruitInput.nativeElement.value = '';
     this.profileForm.controls.ruoli.setValue(null);
   }
@@ -112,7 +116,9 @@ export class CreateUserComponent implements OnInit {
       UtilFunctions.resetFormAllErrors(this.profileForm);
       return;
     }
-    firebase.auth().createUserWithEmailAndPassword(this.profileForm.controls.email.value, this.profileForm.controls.password.value)
+    const authApp = firebase.initializeApp(environment.firebase, 'authApp');
+    const detachedAuth = authApp.auth();
+    detachedAuth.createUserWithEmailAndPassword(this.profileForm.controls.email.value, this.profileForm.controls.password.value)
       .then(newUser => {
         newUser.user.updateProfile({displayName: this.profileForm.controls.displayName.value});
         this.userService.createProfile({

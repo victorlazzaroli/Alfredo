@@ -62,5 +62,13 @@
     cursor: pointer;
     color: #3f51b5;
     font-weight: bold;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    mat-icon {
+      margin-right: 0.5rem;
+    }
   }
 }
