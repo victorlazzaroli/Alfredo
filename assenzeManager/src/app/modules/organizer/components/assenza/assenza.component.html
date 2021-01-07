@@ -60,7 +60,7 @@
       <p>* campi obbligatori</p>
     </div>
     <div class="align-right mt-7">
-      <button mat-raised-button (click)="addAssenza()" class="align-right" color="primary">Invia</button>
+      <button mat-raised-button (click)="addAssenza()" class="align-right" color="primary">{{ isModifica ? 'Salva Modifiche' : 'Invia' }}</button>
     </div>
   </form>
 </mat-card>

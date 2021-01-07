@@ -2,7 +2,7 @@
   <div class="loginContainer mat-elevation-z2">
     <img src="assets/logo.png">
     <h1><strong>Ai</strong>fredo</h1>
-    <h2>Assenze Organizer</h2>
+    <h2>Piattaforma Organizzativa</h2>
     <mat-error *ngIf="error" class="align-center font-bold">Email o Password errati o non censiti</mat-error>
     <div  class="authForm" *ngIf="authService.getAuthUser() | async as user; else showLogin">
       <h2>Ciao {{ user.displayName }}!</h2>
