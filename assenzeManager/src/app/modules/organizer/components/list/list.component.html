@@ -3,6 +3,9 @@
     <h1>Lista di assenze</h1>
     <button mat-button (click)="refreshTable()">Refresh <mat-icon>refresh</mat-icon></button>
   </div>
+  <div class="row filters">
+    <button mat-button [color]="currentFilter === ruolo ? 'accent' : null" *ngFor="let ruolo of listaRuoli" (click)="filter(ruolo)">{{ ruolo | uppercase }}</button>
+  </div>
   <div class="listaContainer" *ngIf="dipendenti?.length > 0 && tabellaDipendentiAssenze?.length > 0">
     <div class="leftEmpty">.</div>
     <div class="tableContainer">
@@ -29,23 +32,25 @@
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let dipendente of dipendenti; let dipendenteIdx = index">
-            <td>
-              <div class="nomeDipendente">{{ dipendente.displayName }}</div>
-            </td>
-            <ng-container *ngFor="let day of tabellaDipendentiAssenze[dipendenteIdx]; let dayIdx = index">
-              <td *ngIf="currentProfile.uid === dipendente.uid"
-                  [matMenuTriggerFor]="appMenu"
-                  [matMenuTriggerData]="{dipendente: dipendenteIdx, giornata: dayIdx, assenza: day.isGiornataAssenza || day.isOreAssenza, holiday: day.isHoliday }"
-                  [matTooltip]="day.tooltipText"
-                  [ngStyle]="{ 'background-color': (day?.isHoliday ? 'rgb(206, 203, 203)' : day?.isGiornataAssenza ? 'red' : day?.isOreAssenza ? 'orange' : 'white')}">
+          <ng-container *ngFor="let dipendente of dipendenti; let dipendenteIdx = index">
+            <tr *ngIf="!excludedRows[dipendenteIdx]">
+              <td>
+                <div class="nomeDipendente">{{ dipendente.displayName }}</div>
               </td>
-              <td *ngIf="currentProfile.uid !== dipendente.uid"
-                  [matTooltip]="day.tooltipText"
-                  [ngStyle]="{ 'background-color': (day?.isHoliday ? 'rgb(206, 203, 203)' : day?.isGiornataAssenza ? 'red' : day?.isOreAssenza ? 'orange' : 'white')}">
-              </td>
-            </ng-container>
-          </tr>
+              <ng-container *ngFor="let day of tabellaDipendentiAssenze[dipendenteIdx]; let dayIdx = index">
+                <td *ngIf="currentProfile.uid === dipendente.uid"
+                    [matMenuTriggerFor]="appMenu"
+                    [matMenuTriggerData]="{dipendente: dipendenteIdx, giornata: dayIdx, assenza: day.isGiornataAssenza || day.isOreAssenza, holiday: day.isHoliday }"
+                    [matTooltip]="day.tooltipText"
+                    [ngStyle]="{ 'background-color': (day?.isHoliday ? 'rgb(206, 203, 203)' : day?.isGiornataAssenza ? 'red' : day?.isOreAssenza ? 'orange' : 'white')}">
+                </td>
+                <td *ngIf="currentProfile.uid !== dipendente.uid"
+                    [matTooltip]="day.tooltipText"
+                    [ngStyle]="{ 'background-color': (day?.isHoliday ? 'rgb(206, 203, 203)' : day?.isGiornataAssenza ? 'red' : day?.isOreAssenza ? 'orange' : 'white')}">
+                </td>
+              </ng-container>
+            </tr>
+          </ng-container>
           </tbody>
         </table>
         <mat-menu #appMenu="matMenu">

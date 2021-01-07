@@ -7,13 +7,17 @@
   .header {
     align-items: baseline;
   }
+  .filters{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   h1 {
     flex-grow: 1;
     font-weight: 500;
   }
 }
 .listaContainer {
-  margin-top: 2rem;
   width: 100%;
   max-height: 80vh;
   box-sizing: border-box;

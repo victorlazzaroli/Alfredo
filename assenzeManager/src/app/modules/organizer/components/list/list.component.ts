@@ -10,6 +10,7 @@ import {first, takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {UserService} from '../../../../core/services/user.service';
 import {CustomShackbarService} from '../../../../core/services/custom-shackbar.service';
+import {RuoloEnum} from '../../../../core/enum/ruoloEnum';
 
 @Component({
   selector: 'app-list',
@@ -27,6 +28,9 @@ export class ListComponent implements OnInit, OnDestroy {
   currentYear: number;
   destroy$: Subject<boolean> = new Subject<boolean>();
   currentProfile: UserInfo;
+  listaRuoli: RuoloEnum[] = [RuoloEnum.ANALISI, RuoloEnum.FRONTEND, RuoloEnum.BACKEND, RuoloEnum.MOBILE];
+  excludedRows: boolean[] = [];
+  currentFilter: RuoloEnum;
 
   constructor(private firestore: AngularFirestore,
               private snackBar: CustomShackbarService,
@@ -63,6 +67,7 @@ export class ListComponent implements OnInit, OnDestroy {
             this.calculateHolidays(this.currentYear, this.currentMonth);
           }
           this.dipendenti.push(dipendente);
+          this.excludedRows.push(false);
         });
         this.getAssenze(this.currentYear, this.currentMonth);
       });
@@ -214,5 +219,15 @@ export class ListComponent implements OnInit, OnDestroy {
   refreshTable() {
     this.destroy$.next();
     this.getDipendenti();
+  }
+
+  filter(ruolo: RuoloEnum) {
+    if (this.currentFilter === ruolo) {
+      this.excludedRows = this.excludedRows.map(row => false);
+      this.currentFilter = null;
+      return;
+    }
+    this.currentFilter = ruolo;
+    this.excludedRows = this.dipendenti.map(dipendente => !dipendente.ruoli.includes(ruolo));
   }
 }
