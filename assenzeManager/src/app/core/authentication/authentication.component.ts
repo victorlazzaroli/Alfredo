@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AngularFirestore, AngularFirestoreCollection} from '@angular/fire/firestore';
 import {Router} from '@angular/router';
 import {AuthProvider} from 'ngx-auth-firebaseui';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {UserInfo} from '../interfaces/UserInfo';
 import firebase from 'firebase/app';
 import {AngularFireAuth} from '@angular/fire/auth';
@@ -37,7 +37,7 @@ export class AuthenticationComponent implements OnInit {
   ngOnInit(): void {
     this.authService.getAuthUser()
       .pipe(
-        switchMap(user => (user as firebase.User) ? this.userService.getUserProfile((user as firebase.User).uid) : null)
+        switchMap(user => (user as firebase.User) ? this.userService.getUserProfile((user as firebase.User).uid) : of(null))
       )
       .subscribe( user => user ? this.router.navigate(['/assenze']) : null);
   }

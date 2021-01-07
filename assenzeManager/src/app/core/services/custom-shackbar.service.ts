@@ -13,7 +13,7 @@ export class CustomShackbarService {
       snackType !== undefined ? snackType : 'Success';
 
     this.snackBar.openFromComponent(MySnackbarComponent, {
-      duration: 2000,
+      duration: 3000,
       horizontalPosition: 'end',
       verticalPosition: 'top',
       data: { message, snackType: type }
