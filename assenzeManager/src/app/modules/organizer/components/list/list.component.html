@@ -1,5 +1,8 @@
 <div class="externalContainer mat-elevation-z2">
-  <h1>Lista di assenze</h1>
+  <div class="row header">
+    <h1>Lista di assenze</h1>
+    <button mat-button (click)="refreshTable()">Refresh <mat-icon>refresh</mat-icon></button>
+  </div>
   <div class="listaContainer" *ngIf="dipendenti?.length > 0 && tabellaDipendentiAssenze?.length > 0">
     <div class="leftEmpty">.</div>
     <div class="tableContainer">

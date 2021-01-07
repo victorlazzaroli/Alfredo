@@ -9,6 +9,7 @@ import {formatISO, isValid} from 'date-fns/esm';
 import {first, takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {UserService} from '../../../../core/services/user.service';
+import {CustomShackbarService} from '../../../../core/services/custom-shackbar.service';
 
 @Component({
   selector: 'app-list',
@@ -28,6 +29,7 @@ export class ListComponent implements OnInit, OnDestroy {
   currentProfile: UserInfo;
 
   constructor(private firestore: AngularFirestore,
+              private snackBar: CustomShackbarService,
               private userService: UserService,
               private assenzaService: AssenzeService) {
     this.currentDate = new Date();
@@ -131,7 +133,15 @@ export class ListComponent implements OnInit, OnDestroy {
     if (!this.tabellaDipendentiAssenze[dipendente][giornata].dipendente || !isValid(data)) {
       return null;
     }
-    return this.assenzaService.cancellaAssenza(this.tabellaDipendentiAssenze[dipendente][giornata].dipendente, data);
+    this.assenzaService.cancellaAssenza(this.tabellaDipendentiAssenze[dipendente][giornata].dipendente, data)
+      .then(result => {
+        this.snackBar.openSnackBar('Assenza cancellata con successo', 'Success');
+        this.refreshTable();
+      })
+      .catch(error => {
+        this.snackBar.openSnackBar('Assenza cancellata con successo', 'Success');
+        console.log(error);
+      });
   }
 
   prevMonth() {
@@ -190,5 +200,10 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     return tooltip;
+  }
+
+  refreshTable() {
+    this.destroy$.next();
+    this.getDipendenti();
   }
 }

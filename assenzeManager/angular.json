@@ -135,5 +135,8 @@
       }
     }
   },
-  "defaultProject": "assenzeManager"
+  "defaultProject": "assenzeManager",
+  "cli": {
+    "analytics": false
+  }
 }

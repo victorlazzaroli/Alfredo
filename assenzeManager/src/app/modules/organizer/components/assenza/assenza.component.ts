@@ -6,7 +6,7 @@ import {lastDayOfMonth} from 'date-fns';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {first, map} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
-import {formatISO, getDayOfYear, isValid, isWithinInterval} from 'date-fns/esm';
+import {formatISO, getDayOfYear, isValid, isWithinInterval, startOfToday} from 'date-fns/esm';
 import firebase from 'firebase/app';
 import {isMoment} from 'moment/moment';
 import {AssenzeService} from '../../services/assenze.service';
@@ -28,6 +28,8 @@ enum TipoAssenzaEnum {
 })
 export class AssenzaComponent implements OnInit {
   currentProfile$: Observable<UserInfo>;
+  private minDatainizio: Date;
+  private minDatafine: Date;
 
   @Input('assenza')
   set _assenza(val: AssenzaDipendente) {
@@ -59,6 +61,8 @@ export class AssenzaComponent implements OnInit {
               private firestore: AngularFirestore) {
 
     this.createForm();
+    this.minDatainizio = startOfToday();
+    this.minDatafine = this.minDatainizio;
   }
 
   private createForm() {
@@ -81,26 +85,30 @@ export class AssenzaComponent implements OnInit {
       } else {
         this.form.controls.frazioneDiGiornata.patchValue(false, { emitEvent: true});
       }
-      if (value === TipoAssenzaEnum.MALATTIA || value === TipoAssenzaEnum.FERIE) {
-        UtilFunctions.resetFormAllErrors(this.form);
-        this.form.controls.oraInizio.clearValidators();
-        this.form.controls.oraFine.clearValidators();
-        this.form.controls.dataFine.setValidators(Validators.required);
-      } else {
-        UtilFunctions.resetFormAllErrors(this.form);
-        this.form.controls.oraInizio.setValidators(Validators.required);
-        this.form.controls.oraFine.setValidators(Validators.required);
-        this.form.controls.dataFine.clearValidators();
+      if (value !== TipoAssenzaEnum.ALTRO) {
+        this.form.controls.descrizioneAltro.reset();
       }
     });
 
     this.form.controls.frazioneDiGiornata.valueChanges.subscribe(value => {
-      if (value) {
+      if (!value) {
         UtilFunctions.resetFormAllErrors(this.form);
-        this.form.controls.oraInizio.setValidators(Validators.required);
-        this.form.controls.oraFine.setValidators(Validators.required);
+        this.form.controls.oraInizio.reset();
+        this.form.controls.oraInizio.clearValidators();
+        this.form.controls.oraFine.reset();
+        this.form.controls.oraFine.clearValidators();
+        this.form.controls.dataFine.setValidators(Validators.required);
+      } else {
+        UtilFunctions.resetFormAllErrors(this.form);
+        this.form.controls.oraInizio.setValidators([Validators.required, Validators.min(8), , Validators.max(24)]);
+        this.form.controls.oraFine.setValidators([Validators.required, Validators.min(8), , Validators.max(24)]);
+        this.form.controls.dataFine.reset();
         this.form.controls.dataFine.clearValidators();
       }
+    });
+
+    this.form.controls.dataInizio.valueChanges.subscribe(value => {
+      this.minDatafine = new Date(value);
     });
   }
 

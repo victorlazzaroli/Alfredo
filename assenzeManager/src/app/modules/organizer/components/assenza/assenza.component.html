@@ -36,13 +36,13 @@
         <mat-form-field appearance="fill">
           <mat-label *ngIf="frazione.checked">Seleziona la data*</mat-label>
           <mat-label *ngIf="!frazione.checked">Data di partenza*</mat-label>
-          <input matInput [matDatepicker]="dataInizio" formControlName="dataInizio"/>
+          <input matInput [min]="minDatainizio" [matDatepicker]="dataInizio" formControlName="dataInizio"/>
           <mat-datepicker-toggle matSuffix [for]="dataInizio"></mat-datepicker-toggle>
           <mat-datepicker #dataInizio></mat-datepicker>
         </mat-form-field>
         <mat-form-field appearance="fill" *ngIf="!frazione.checked">
           <mat-label>Data di fine*</mat-label>
-          <input matInput [matDatepicker]="dataFine" formControlName="dataFine"/>
+          <input matInput [min]="minDatafine" [matDatepicker]="dataFine" formControlName="dataFine"/>
           <mat-datepicker-toggle matSuffix [for]="dataFine"></mat-datepicker-toggle>
           <mat-datepicker #dataFine></mat-datepicker>
         </mat-form-field>
