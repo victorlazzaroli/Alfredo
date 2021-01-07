@@ -8,7 +8,7 @@ import {MySnackbarComponent} from '../components/my-snackbar/my-snackbar.compone
 export class CustomShackbarService {
 
   constructor(private snackBar: MatSnackBar) { }
-  public openSnackBar(message: string, action: string, snackType?: string) {
+  public openSnackBar(message: string, snackType?: string) {
     const type: string =
       snackType !== undefined ? snackType : 'Success';
 

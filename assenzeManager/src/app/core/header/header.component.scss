@@ -12,6 +12,10 @@
 
   .logo {
     margin-right: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 
     h1 {
       font-size: 1.8rem;
@@ -23,6 +27,10 @@
       font-size: 2.3rem;
       font-weight: bold;
       color: rgb(21, 66, 214);
+    }
+
+    img {
+      margin-right: 0.5rem;
     }
   }
 

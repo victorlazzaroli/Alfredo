@@ -1,10 +1,7 @@
-mat-icon {
-  color: green;
-}
-
 .snack-container {
   display: flex;
   flex-direction: row;
+  align-items: center;
 
   #message {
     flex-grow: 1;

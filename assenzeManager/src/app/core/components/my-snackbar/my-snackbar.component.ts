@@ -16,13 +16,26 @@ export class MySnackbarComponent implements OnInit {
   get getIcon() {
     switch (this.data.snackType) {
       case 'Success':
-        return 'done';
+        return 'check_circle';
       case 'Error':
-        return 'error';
+        return 'highlight_off';
       case 'Warn':
-        return 'warning';
+        return 'error';
       case 'Info':
         return 'info';
+    }
+  }
+
+  get iconColor() {
+    switch (this.data.snackType) {
+      case 'Success':
+        return 'green';
+      case 'Error':
+        return 'red';
+      case 'Warn':
+        return 'yellow';
+      case 'Info':
+        return 'blue';
     }
   }
 }

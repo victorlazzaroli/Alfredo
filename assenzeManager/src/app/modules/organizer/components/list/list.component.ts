@@ -5,7 +5,7 @@ import {UserInfo} from '../../../../core/interfaces/UserInfo';
 import {AssenzaDipendente, Day, GiornataCalendario} from '../../../../core/interfaces/Assenze';
 import * as _ from 'lodash';
 import {AssenzeService} from '../../services/assenze.service';
-import {formatISO, isValid} from 'date-fns/esm';
+import {formatISO, isPast, isValid} from 'date-fns/esm';
 import {first, takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {UserService} from '../../../../core/services/user.service';
@@ -114,10 +114,16 @@ export class ListComponent implements OnInit, OnDestroy {
 
 
   async modificaAssenza(dipendente: number, giornata: number, modifica: boolean = true) {
+    const data = new Date(this.currentYear, this.currentMonth, giornata);
+    if (!isValid(data)) {
+      return this.snackBar.openSnackBar('Data non valida', 'Error');
+    }
+    if (isPast(data)) {
+      return this.snackBar.openSnackBar('Data passata', 'Warn');
+    }
     if (modifica) {
       this.modificaAssenzaEvento.emit({...this.tabellaDipendentiAssenze[dipendente][giornata]});
     } else {
-      const data = new Date(this.currentYear, this.currentMonth, giornata);
       this.modificaAssenzaEvento.emit({
         dipendente: this.dipendenti[dipendente].uid,
         tipoAssenza: 'FERIE',
@@ -131,7 +137,10 @@ export class ListComponent implements OnInit, OnDestroy {
   async deleteAssenza(dipendente: number, giornata: number) {
     const data = new Date(this.tabellaDipendentiAssenze[dipendente][giornata].dataInizio);
     if (!this.tabellaDipendentiAssenze[dipendente][giornata].dipendente || !isValid(data)) {
-      return null;
+      return this.snackBar.openSnackBar('Data non valida', 'Error');
+    }
+    if (isPast(data)) {
+      return this.snackBar.openSnackBar('Data passata', 'Warn');
     }
     this.assenzaService.cancellaAssenza(this.tabellaDipendentiAssenze[dipendente][giornata].dipendente, data)
       .then(result => {
