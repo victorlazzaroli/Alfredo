@@ -24,7 +24,7 @@ import {CreateUserComponent} from './core/components/create-user/create-user.com
 import {MatCardModule} from '@angular/material/card';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatOptionModule} from '@angular/material/core';
+import {MAT_DATE_FORMATS, MatOptionModule} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
@@ -37,6 +37,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { MySnackbarComponent } from './core/components/my-snackbar/my-snackbar.component';
 import {MatTableModule} from '@angular/material/table';
 import {MatSortModule} from '@angular/material/sort';
+import {MY_FORMATS} from './shared/dateFormat';
 
 @NgModule({
   declarations: [
@@ -81,7 +82,7 @@ import {MatSortModule} from '@angular/material/sort';
     MatSnackBarModule,
     MatSortModule
   ],
-  providers: [],
+  providers: [{provide: MAT_DATE_FORMATS, useValue: MY_FORMATS}],
   bootstrap: [AppComponent]
 })
 export class AppModule {
