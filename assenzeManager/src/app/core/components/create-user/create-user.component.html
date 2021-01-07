@@ -2,15 +2,15 @@
   <mat-card-title>Creazione Utente</mat-card-title>
   <form class="authForm" [formGroup]="profileForm">
     <mat-form-field style="margin-top: 1rem">
-      <mat-label>Dipendente</mat-label>
+      <mat-label>Dipendente*</mat-label>
       <input matInput name="AIFredoName" type="text" formControlName="displayName">
     </mat-form-field>
     <mat-form-field style="margin-top: 1rem">
-      <mat-label>Email</mat-label>
+      <mat-label>Email*</mat-label>
       <input matInput name="AIFredoEmail" formControlName="email">
     </mat-form-field>
     <mat-form-field style="margin-top: 1rem">
-      <mat-label>Password</mat-label>
+      <mat-label>Password*</mat-label>
       <input matInput name="AIFredoPassword" formControlName="password">
       <mat-hint>La password deve essere lunga almeno 6 caratteri</mat-hint>
     </mat-form-field>
