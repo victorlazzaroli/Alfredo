@@ -136,4 +136,12 @@ export class CreateUserComponent implements OnInit {
       })
       .catch(error => this.snackBar.openSnackBar('Errore durante la creazione', 'Error'));
   }
+
+  generaPassword() {
+    const lista: number[] = [];
+    for (let i = 0; i < 10; i++) {
+      lista.push(Math.floor(Math.random() * 42) + 65);
+    }
+    this.profileForm.controls.password.patchValue(String.fromCharCode(...lista));
+  }
 }

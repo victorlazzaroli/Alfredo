@@ -9,11 +9,14 @@
       <mat-label>Email*</mat-label>
       <input matInput name="AIFredoEmail" formControlName="email">
     </mat-form-field>
-    <mat-form-field style="margin-top: 1rem">
-      <mat-label>Password*</mat-label>
-      <input matInput name="AIFredoPassword" formControlName="password">
-      <mat-hint>La password deve essere lunga almeno 6 caratteri</mat-hint>
-    </mat-form-field>
+    <div style="display: flex">
+      <mat-form-field style="flex-grow:1; margin-top: 1rem">
+        <mat-label>Password*</mat-label>
+        <input matInput name="AIFredoPassword" formControlName="password">
+        <mat-hint>La password deve essere lunga almeno 6 caratteri</mat-hint>
+      </mat-form-field>
+      <button mat-button (click)="generaPassword()">Genera Password</button>
+    </div>
     <mat-form-field style="margin-top: 1rem">
       <mat-label>Ruolo</mat-label>
       <mat-chip-list #chipList aria-label="Ruolo selection">
