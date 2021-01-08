@@ -93,17 +93,17 @@ export class AssenzaComponent implements OnInit {
     this.form.controls.frazioneDiGiornata.valueChanges.subscribe(value => {
       if (!value) {
         UtilFunctions.resetFormAllErrors(this.form);
-        this.form.controls.oraInizio.reset();
         this.form.controls.oraInizio.clearValidators();
-        this.form.controls.oraFine.reset();
         this.form.controls.oraFine.clearValidators();
         this.form.controls.dataFine.setValidators(Validators.required);
+        this.form.controls.oraInizio.reset();
+        this.form.controls.oraFine.reset();
       } else {
         UtilFunctions.resetFormAllErrors(this.form);
         this.form.controls.oraInizio.setValidators([Validators.required, Validators.min(8), , Validators.max(24)]);
         this.form.controls.oraFine.setValidators([Validators.required, Validators.min(8), , Validators.max(24)]);
-        this.form.controls.dataFine.reset();
         this.form.controls.dataFine.clearValidators();
+        this.form.controls.dataFine.reset();
       }
     });
 
