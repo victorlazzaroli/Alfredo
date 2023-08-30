@@ -5,13 +5,13 @@
 export const environment = {
   production: false,
   firebase: {
-    apiKey: 'AIzaSyDwwW6hJiHLnT2Q1xMUW2cQrPqjvPt_DB8',
+    apiKey: '----------------',
     authDomain: 'assenzemanager.firebaseapp.com',
     projectId: 'assenzemanager',
     storageBucket: 'assenzemanager.appspot.com',
-    messagingSenderId: '828415920184',
-    appId: '1:828415920184:web:686d02e5f64708f729fecd',
-    measurementId: 'G-XETX53HLXQ'
+    messagingSenderId: '--------------',
+    appId: '------------------',
+    measurementId: '--------------'
   }
 };
 
